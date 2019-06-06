@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar color="dark">
-    <ion-title class="navTitle">Create Container</ion-title>
+    <ion-title class="navTitle">Create/Pull - Container/Image</ion-title>
     <ion-buttons end>
       <button ion-button icon-only title="Κλείσιμο" (click)="dismiss()">
         <ion-icon name="close"></ion-icon>
@@ -12,21 +12,51 @@
 <ion-content padding class="background-template">
   <div class="template-center">
 
+    <div *ngIf="images.length>0">
+      <ion-title class="align-center">
+        Available Images
+      </ion-title>
+
+      <ion-list *ngFor="let img of images;">
+        <ion-item>
+          <div class="inline">
+            {{ img.RepoTags[0] }}
+          </div>
+
+          <div class="inline" item-end>
+            <ion-icon color="secondary" class="cursorCs" name="add" title="Create container" (click)="createContainer([img.RepoTags[0]])" item-end></ion-icon>
+          </div>
+        </ion-item>
+      </ion-list>
+
+      <hr>
+      
+    </div>
+
     <ion-title class="align-center">
-      Available Images
+      Pull new image
     </ion-title>
 
-    <ion-list *ngFor="let img of images;">
-      <ion-item>
-        <div class="inline">
-          {{ img.RepoTags[0] }}
-        </div>
+    <ion-item>
+      <ion-label>Docker repo name</ion-label>
+      <ion-input type="text" [(ngModel)]="image_name" value=""></ion-input>
+    </ion-item>
+    <br>
+    <div class="align-center">
+      <h6>Examples</h6>
+      <ul>
+        <li>enhariharan/infinite-loop:latest</li>
+        <li>hello-world:latest</li>
+        <li>tutum/hello-world:latest </li>
+        <li>kitematic/hello-world-nginx:latest</li>
+      </ul>
+    </div>
 
-        <div class="inline" item-end>
-          <ion-icon color="secondary" class="cursorCs" name="add" title="Create" (click)="createContainer()" item-end></ion-icon>
-        </div>
-      </ion-item>
-    </ion-list>
+    <div  class="align-center">
+      <button ion-button round (click)="pullImage()">
+        Pull
+      </button>
+    </div>
 
 
 

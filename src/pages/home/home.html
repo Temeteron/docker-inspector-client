@@ -1,6 +1,7 @@
 <ion-header>
   <ion-navbar color="dark">
     <ion-title class="navTitle">Home</ion-title>
+    <ion-spinner name="ios" color="success" *ngIf="load"></ion-spinner>
   </ion-navbar>
 </ion-header>
 
@@ -15,22 +16,19 @@
       <container [container]="cont"></container>
     </ion-list>
 
+    <div *ngIf="container_to_show_stats">
+      <br>
+      <ion-title>
+        Stats of Container: {{ container_to_show_stats.Names[0] }}
+      </ion-title>
+      <stats [container]="container_to_show_stats"></stats>
+    </div>
 
   </div>
 
   <ion-fab class="fab-class">
-    <button ion-fab color="dark"><ion-icon name="apps"></ion-icon></button>
-    
-    <ion-fab-list side="left">
-      <button ion-fab color="secondary" title="Create Container" (click)="createContainerModal()">
-        <ion-icon name="add"></ion-icon>
-      </button>
-    </ion-fab-list>
-
-    <ion-fab-list side="top">
-      <button ion-fab color="primary" title="Pull Image" (click)="getAvailableContainers()">
-        <ion-icon name="download"></ion-icon>
-      </button>
-    </ion-fab-list>
+    <button ion-fab color="secondary" title="Create Container" (click)="createContainerModal()">
+      <ion-icon name="add"></ion-icon>
+    </button>
   </ion-fab>
 </ion-content>
