@@ -1,0 +1,90 @@
+page-modal {
+	.background-template {
+		background-color: #f4f4f4;
+	}
+
+	.cursorCs {
+		cursor: pointer;
+	}
+
+	.align-right {
+		text-align: right;
+	}
+
+	.align-left {
+		text-align: left;	
+	}
+
+	.inline {
+	    display: inline-block;
+	}
+
+	.float-right {
+		float: right;
+	}
+
+	.float-left {
+		position: relative;
+		// padding: 10px;
+		float: left;
+	}
+
+	.float-center {
+		float: center;
+	}
+
+	.absoluteCenter {
+		// top: 0;
+  //       bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto auto;
+        position: absolute;
+	}
+
+	.relativeP {
+		position: relative;
+	}
+
+	.absoluteL {
+		position: absolute;
+		float: left;
+	}
+
+	.align-center {
+		text-align: center;
+	}
+
+	.align-info-center {
+		align-self: center;
+	}
+
+	.profile-picture-cont {
+	    flex: 0.68 1 180px;
+    	align-self: center;
+	}
+
+	.color-red {
+		color: red;
+	}
+
+	.font25 {
+		font-size: 1.5em;
+	}
+
+	.font2 {
+		font-size: 1.4em;
+	}
+
+	.font15 {
+		font-size: 1.2em;
+	}
+
+	.font1 {
+		font-size: 1em;
+	}
+
+	.font0 {
+		font-size: 14px;
+	}
+}
