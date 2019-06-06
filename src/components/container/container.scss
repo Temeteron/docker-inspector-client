@@ -1,0 +1,21 @@
+container {
+	.cursorCs {
+		cursor: pointer;
+	}
+
+	.inline {
+		display: inline;
+	}
+
+	.parent-flex {
+		display: flex;
+		justify-content: center;
+	}
+
+	.child-flex {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+}

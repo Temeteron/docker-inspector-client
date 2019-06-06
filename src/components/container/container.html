@@ -1,0 +1,16 @@
+<ion-item class="parent-flex">
+	<div class="inline">
+		{{ container.Image }}
+	</div>
+
+	<div class="inline">
+		&nbsp; <b>Status:</b> {{ container.State }}
+	</div>
+
+	<div class="inline" item-end>
+		<ion-icon color="secondary" class="cursorCs" name="ios-magnet" title="Start" (click)="start()" item-end></ion-icon>
+		<ion-icon color="primary" class="cursorCs" name="hand" title="Stop" (click)="stop()" item-end></ion-icon>
+		<ion-icon color="danger" class="cursorCs" name="trash" title="Delete" (click)="delete()" item-end></ion-icon>
+	</div>
+
+</ion-item>
