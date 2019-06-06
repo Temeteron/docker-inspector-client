@@ -1,15 +1,9 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NavController, NavParams, LoadingController } from 'ionic-angular';
 import { ApiProvider } from "../../providers/api/api";
 import { HomePage } from "../../pages/home/home";
 
 
-/**
- * Generated class for the ContainerComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
 @Component({
   selector: 'container',
   templateUrl: 'container.html'
@@ -18,10 +12,16 @@ export class ContainerComponent {
   @Input() container: any;
   loader: any = null;
 
-
   constructor(public navParams: NavParams, public navCtrl: NavController, public api: ApiProvider, public loadingCtrl: LoadingController,) {
-    // console.log(`Name: ${this.navParams.get('name')}`);
-    // this.name = this.navParams.get('name');
+
+  }
+
+  checkRunning(state) {
+    if (state == 'running') {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   start() {

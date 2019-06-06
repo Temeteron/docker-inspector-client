@@ -1,10 +1,11 @@
 <ion-item class="parent-flex">
 	<div class="inline">
-		{{ container.Image }}
+		<b>Container:</b> {{ container.Names[0] }} - <b>Image:</b> {{ container.Image }}
 	</div>
 
 	<div class="inline">
 		&nbsp; <b>Status:</b> {{ container.State }}
+		<ion-icon color="dark" *ngIf="checkRunning(container.State)" class="cursorCs" name="stats" title="Stats" item-end></ion-icon>
 	</div>
 
 	<div class="inline" item-end>

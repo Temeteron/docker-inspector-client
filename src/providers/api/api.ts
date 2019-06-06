@@ -29,15 +29,22 @@ export class ApiProvider {
 ///////////////////////////////////////////////////////////////////////////////////////
 
   // PULL DOCKER IMAGE BY NAME
-  pullImage(user, repo_name): Observable<any> {
+  pullImage(repo_name): Observable<any> {
+    let data = { repo_name: repo_name };
 
-    return this.http.get(`${this.baseApiUrl}/pull_docker/${user}/${repo_name}`);
+    return this.http.post(`${this.baseApiUrl}/pull_docker`, data);
   }
 
   // GET STATS OF CONTAINER
   getStatsOfContainer(id): Observable<any> {
 
     return this.http.get(`${this.baseApiUrl}/get_stats_of_container/${id}`);
+  }
+
+  // GET STATS OF CONTAINER
+  getLogsOfContainer(id): Observable<any> {
+
+    return this.http.get(`${this.baseApiUrl}/get_logs_of_container/${id}`);
   }
 
   // GET LIST OF CONTAINERS
@@ -57,14 +64,11 @@ export class ApiProvider {
 ///////////////////////////////////////////////////////////////////////////////////////
 
   // CREATE CONTAINER FROM SPECIFIED IMAGE NAME (enhariharan/infinite-loop)
-  createContainer(user, repo_name): Observable<any> {
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    let data = { user: user, repo_name: repo_name };
+  createContainer(repo_name): Observable<any> {
+    let data = { repo_name: repo_name };
 
 // JSON.stringify(loginData), 
-    return this.http.post(`${this.baseApiUrl}/create_container/${user}/${repo_name}`, data);
+    return this.http.post(`${this.baseApiUrl}/create_container`, data);
   }
 
   // START CONTAINER

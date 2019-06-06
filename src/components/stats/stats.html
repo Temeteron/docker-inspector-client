@@ -1,0 +1,48 @@
+<div>
+  <ion-item>
+    <ion-grid>
+
+      <ion-row>
+        
+        <ion-col title="CPU" class="center">
+          <div>
+            CPU Usage
+          </div>
+          <div>
+            <ion-icon name="speedometer"></ion-icon>
+          </div>
+          <div>
+            <ion-badge>{{ container?.cpu_stats?.cpu_usage?.total_usage }}</ion-badge>
+          </div>
+        </ion-col>
+
+        <ion-col title="Online CPU" class="center">
+            <div>
+              Online cpus
+            </div>
+            <div>
+              <ion-icon name="bulb"></ion-icon>
+            </div>
+            <div>
+              <ion-badge>{{ container?.cpu_stats?.online_cpus }}</ion-badge>
+            </div>
+        </ion-col>
+
+        <ion-col title="Memory" class="center">
+          <div>
+            Memory
+          </div>
+          <div>
+            <ion-icon name="eye"></ion-icon>
+          </div>
+
+          <div>
+            <ion-badge>{{ container?.memory_stats?.usage }}</ion-badge>
+          </div>
+        </ion-col>
+
+
+      </ion-row>
+    </ion-grid>
+  </ion-item>
+</div>
