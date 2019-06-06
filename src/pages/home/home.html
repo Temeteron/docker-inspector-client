@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar color="dark">
+    <ion-title class="navTitle">Home</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="background-template parent">
+  <div class="template-center Aligner">
+
+<!--     <ion-title class="center" *ngIf="!containers">
+      Use the button to add containers
+    </ion-title> -->
+
+    <ion-list *ngFor="let cont of containers;">
+      <container [container]="cont"></container>
+    </ion-list>
+
+
+  </div>
+
+  <ion-fab class="fab-class">
+    <button ion-fab color="dark"><ion-icon name="apps"></ion-icon></button>
+    
+    <ion-fab-list side="left">
+      <button ion-fab color="secondary" title="Create Container" (click)="createContainerModal()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-fab-list>
+
+    <ion-fab-list side="top">
+      <button ion-fab color="primary" title="Pull Image" (click)="getAvailableContainers()">
+        <ion-icon name="download"></ion-icon>
+      </button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>
