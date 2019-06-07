@@ -14,15 +14,6 @@ export class ApiProvider {
 
   constructor(public http: HttpClient) {}
 
-  // login(username, password): Observable<any> {
-  // 	var headers = new Headers();
-  // 	headers.append('Content-Type', 'application/json');
-
-  // 	let loginData = { username: username, password: password };
-
-  // 	return this.http.post(`${this.baseApiUrl}/jwt-auth/`, JSON.stringify(loginData), {headers: headers})
-  //   	.map(res => <any>(res.json()));
-  // }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////// GET //////////////////////////////////////////
