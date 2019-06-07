@@ -29,7 +29,8 @@ export class HomePage {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-  getAvailableContainers() {
+  getAvailableContainers(event) {
+    console.log("getAvailableContainers: " + event);
     this.load = true;
     // this.presentLoading();
     this.api.getListOfContainers().subscribe(res => {
@@ -83,6 +84,25 @@ export class HomePage {
     });
 
     modal.present();
+  }
+
+///////////////////////////////////////////////////////////////////////////////////
+
+  onStats(contStats) {
+    if (this.container_to_show_stats) {
+      if (contStats.container.Id == this.container_to_show_stats.Id) {
+        console.log("Already Showing stats for this container. Will disable");
+        this.container_to_show_stats = null;
+      } else {
+        if (contStats.active) {
+          this.container_to_show_stats = contStats.container;
+          console.log("Activate Stats on container: " + contStats.container.Names[0]);
+        }
+      }
+    } else {
+      console.log("Activate Stats on container: " + contStats.container.Names[0]);
+      this.container_to_show_stats = contStats.container;
+    }
   }
 
 ////////////////////////////// PAGE HELPERS ////////////////////////////////////////

@@ -1,5 +1,15 @@
 <div>
+
+  <br>
+  <ion-title class="center">
+    Stats of Container: {{ container?.Names[0] }}
+  </ion-title>
+
+
   <ion-item>
+  	<div class="center">
+  		{{ stats?.read | date: 'mediumTime'}}
+  	</div>
     <ion-grid>
 
       <ion-row>
@@ -12,7 +22,7 @@
             <ion-icon name="speedometer"></ion-icon>
           </div>
           <div>
-            <ion-badge>{{ container?.cpu_stats?.cpu_usage?.total_usage }}</ion-badge>
+            <ion-badge>{{ stats?.cpu_stats?.cpu_usage?.total_usage }}</ion-badge>
           </div>
         </ion-col>
 
@@ -24,7 +34,7 @@
               <ion-icon name="bulb"></ion-icon>
             </div>
             <div>
-              <ion-badge>{{ container?.cpu_stats?.online_cpus }}</ion-badge>
+              <ion-badge>{{ stats?.cpu_stats?.online_cpus }}</ion-badge>
             </div>
         </ion-col>
 
@@ -37,7 +47,7 @@
           </div>
 
           <div>
-            <ion-badge>{{ container?.memory_stats?.usage }}</ion-badge>
+            <ion-badge>{{ stats?.memory_stats?.usage }}</ion-badge>
           </div>
         </ion-col>
 

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NavController, NavParams, LoadingController } from 'ionic-angular';
 import { ApiProvider } from "../../providers/api/api";
 import { HomePage } from "../../pages/home/home";
@@ -10,9 +10,13 @@ import { HomePage } from "../../pages/home/home";
 })
 export class ContainerComponent {
   @Input() container: any;
+  @Output() stats = new EventEmitter<any>();
+  @Output() changedState = new EventEmitter<boolean>();
+  colorStats: string = 'dark';
+  activeStats: boolean = false;
   loader: any = null;
 
-  constructor(public navParams: NavParams, public navCtrl: NavController, public api: ApiProvider, public loadingCtrl: LoadingController,) {
+  constructor(public navParams: NavParams, public navCtrl: NavController, public api: ApiProvider, public loadingCtrl: LoadingController) {
 
   }
 
@@ -24,44 +28,63 @@ export class ContainerComponent {
     }
   }
 
+  toggleStats(activate) {
+    this.activeStats = activate;
+    // this.setColorStats();
+    let statsObj = {
+      "container": this.container,
+      "active": this.activeStats
+    }
+
+    this.stats.emit(statsObj);
+  }
+
   start() {
     this.presentLoading();
     this.api.startContainer(this.container.Id).subscribe(res => {
+        this.stateChanged();
         this.dismissInitLoader();
-        this.refreshHomePage();
-        // console.log(res);
     },
       err => {
         this.dismissInitLoader();
-        console.error(err);
+        console.log("Error start: " + err);
     });
   }
 
   stop() {
     this.presentLoading();
     this.api.stopContainer(this.container.Id).subscribe(res => {
+        this.toggleStats(false);
+        this.stateChanged();
         this.dismissInitLoader();
-        this.refreshHomePage();
-        // console.log(res);
     },
       err => {
         this.dismissInitLoader();
-        console.error(err);
+        console.log("Error stop: " + err);
     });
   }
 
   delete() {
     this.presentLoading();
     this.api.deleteContainer(this.container.Id).subscribe(res => {
+        this.stateChanged();
         this.dismissInitLoader();
-        this.refreshHomePage();
-        // console.log(res);
     },
       err => {
         this.dismissInitLoader();
-        console.error(err);
+        console.log("Error delete: " + err);
     });
   }
+
+  stateChanged() {
+    console.log("stateChanged");
+    this.changedState.emit(true);
+  }
+
+  // setColorStats() {
+  //   this.colorStats = this.activeStats ? 'secondary' : 'dark';
+  //   console.log('Color: ' + this.colorStats);
+  // }
 
   presentLoading() {
     this.loader = this.loadingCtrl.create({
@@ -71,9 +94,9 @@ export class ContainerComponent {
     this.loader.present();
   }
 
-  refreshHomePage() {
-    this.navCtrl.setRoot(HomePage);
-  }
+  // refreshHomePage() {
+  //   this.navCtrl.setRoot(HomePage);
+  // }
 
   dismissInitLoader() {
     if (this.loader) {

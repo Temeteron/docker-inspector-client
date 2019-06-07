@@ -13,14 +13,10 @@
     </ion-title> -->
 
     <ion-list *ngFor="let cont of containers;">
-      <container [container]="cont"></container>
+      <container [container]="cont" (stats)="onStats($event)" (changedState)="getAvailableContainers($event)"></container>
     </ion-list>
 
     <div *ngIf="container_to_show_stats">
-      <br>
-      <ion-title>
-        Stats of Container: {{ container_to_show_stats.Names[0] }}
-      </ion-title>
       <stats [container]="container_to_show_stats"></stats>
     </div>
 
