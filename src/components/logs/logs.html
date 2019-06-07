@@ -1,0 +1,18 @@
+<div>
+
+  <br>
+  <ion-title class="center">
+    Logs of Container: {{ container?.Names[0] }}
+  </ion-title>
+
+  <ion-item>
+    <div class="center">
+        <b>{{ date | date: 'mediumTime'}}</b>
+    </div>
+    <div class="background-logs">
+        <div *ngFor="let log of logs;">
+            {{ log }}
+        </div>
+    </div>
+  </ion-item>
+</div>
