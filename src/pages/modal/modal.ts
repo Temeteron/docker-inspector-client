@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ViewController, LoadingController, Events } from 'ionic-angular';
+import { NavParams, ViewController, LoadingController } from 'ionic-angular';
 
 import { ApiProvider } from '../../providers/api/api';
 
@@ -9,42 +9,63 @@ import { ApiProvider } from '../../providers/api/api';
   templateUrl: 'modal.html'
 })
 export class ModalPage {
-  loader: any = null;
-  images: any = null;
-  image_name: any = null;
-  load_images: boolean = false;
+  loader: any = null;                // LOADER VAR FOR ASYNC REQUESTS
+  images: any = null;                // ARRAY THAT CONTAINS AVAILABLE IMAGES
+  image_name: any = null;            // VARIABLE TO SAVE IMAGE NAME TO PULL
+  load_images: boolean = false;      // BOOLEAN IF IMAGE WAS PULLED = TRUE
 
-  constructor(public navCtrl: NavController, public events: Events, private loadingCtrl: LoadingController, private api: ApiProvider, public navParams: NavParams, public viewCtrl: ViewController) {
+  constructor(private loadingCtrl: LoadingController, private api: ApiProvider, public navParams: NavParams, public viewCtrl: ViewController) {
     this.images = this.navParams.get('images');
   }
 
+///////////////////////////////////////////////////////////////////////////
+// CREATE CONTAINER FROM GIVER IMAGE
+///////////////////////////////////////////////////////////////////////////
   createContainer(img_name) {
-    // console.log(JSON.stringify(img_name.toString()));
+    // SHOW LOADER
+    this.presentLoading();
     this.api.createContainer(img_name.toString()).subscribe(res => {
-        this.loader = false;
+        // DISMISS LOADER
+        this.dismissLoader();
+        // DISMISS MODAL
         this.dismiss(this.load_images);
     });
   }
 
+///////////////////////////////////////////////////////////////////////////
+// PULL IMAGE FROM REPOSITORY
+///////////////////////////////////////////////////////////////////////////
   pullImage() {
+    // BECAUSE IMAGE WAS PULLED INFORM PARENT TO 
+    // GET THE NEW LIST OF IMAGES
     this.load_images = true;
+
+    // SHOW LOADER
     this.presentLoading();
-    // console.log("Will pull: " + this.image_name);
     this.api.pullImage(this.image_name).subscribe(res => {
-        // console.log('Pull img: ' + JSON.stringify(res));
+        // DISMISS LOADER
         this.dismissLoader();
+        // DISMISS MODAL
         this.dismiss(this.load_images);
     },
       err => {
+        // DISMISS LOADER
         this.dismissLoader();
+        // DISMISS MODAL
         this.dismiss(this.load_images);
     });
   }
 
+///////////////////////////////////////////////////////////////////////////
+// DISMIIS MODAL
+///////////////////////////////////////////////////////////////////////////
   dismiss(data) {
     this.viewCtrl.dismiss(data);
   }
 
+///////////////////////////////////////////////////////////////////////////
+// SHOW LOADER
+///////////////////////////////////////////////////////////////////////////
   presentLoading() {
     this.loader = this.loadingCtrl.create({
       content: "Please wait...",
@@ -53,6 +74,9 @@ export class ModalPage {
     this.loader.present();
   }
 
+///////////////////////////////////////////////////////////////////////////
+// DISMISS LOADER
+///////////////////////////////////////////////////////////////////////////
   dismissLoader() {
     if (this.loader) {
       this.loader.dismiss();
