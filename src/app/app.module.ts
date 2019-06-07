@@ -11,7 +11,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
-import { SharedProperties } from '../providers/shared-properties/shared-properties';
 
 @NgModule({
   declarations: [
@@ -34,7 +33,6 @@ import { SharedProperties } from '../providers/shared-properties/shared-properti
     StatusBar,
     SplashScreen,
     ApiProvider,
-    SharedProperties,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

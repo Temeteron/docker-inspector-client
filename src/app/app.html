@@ -1,5 +1,4 @@
-<ion-split-pane when="md">
-<ion-menu [content]="content" style="max-width: 300px!important;">
+<ion-menu [content]="content">
   <ion-header>
     <ion-toolbar color="dark">
       <ion-title>Menu</ion-title>
@@ -18,4 +17,3 @@
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
 <ion-nav main [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>
-</ion-split-pane>
