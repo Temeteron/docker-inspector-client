@@ -7,53 +7,10 @@ page-home {
 		text-align: center;
 	}
 
-	ion-spinner * {
-		/*fill: white;*/
-	}
-
 	.vertical-center {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-	}
-
-	.wrong {
-		background-color: transparent;
-		color: red;
-	}
-
-	.font25 {
-		font-size: 2rem;
-	}
-
-	.font15 {
-		font-size: 1.2em;
-	}
-
-	.font0 {
-		font-size: 14px;
-	}
-	
-	.formLogin {
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		// padding: 0 90px 1px;
-		// width: 100%;
-		// height: 100%;
-		// text-align: center;
-	}
-
-	.Aligner {
-		// position: relative;
-		// top: 35%;
-		// transform: translateY(-35%);
-	}
-
-	.parent {
-		// -webkit-transform-style: preserve-3d;
-		// -moz-transform-style: preserve-3d;
-		// transform-style: preserve-3d;
 	}
 
 	.fab-class{

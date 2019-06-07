@@ -5,7 +5,10 @@
 
 	<div class="inline">
 		&nbsp; <b>Status:</b> {{ container.State }}
-		<ion-icon color="dark" *ngIf="checkRunning(container.State)" class="cursorCs" name="stats" title="Stats" (click)="toggleStats(!activeStats)" item-end></ion-icon>
+		<div *ngIf="checkRunning(container.State)" class="inline">
+			<ion-icon color="dark" class="cursorCs" name="stats" title="Stats" (click)="toggleStats('toggle')" item-end></ion-icon>
+			<ion-icon color="primary" class="cursorCs" name="paper" title="Logs" (click)="toggleLogs('toggle')" item-end></ion-icon>
+		</div >
 	</div>
 
 	<div class="inline" item-end>

@@ -5,19 +5,19 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding class="background-template parent">
-  <div class="template-center Aligner">
-
-<!--     <ion-title class="center" *ngIf="!containers">
-      Use the button to add containers
-    </ion-title> -->
+<ion-content padding class="background-template">
+  <div class="template-center">
 
     <ion-list *ngFor="let cont of containers;">
-      <container [container]="cont" (stats)="onStats($event)" (changedState)="getAvailableContainers($event)"></container>
+      <container [container]="cont" (stats)="onStats($event)" (logs)="onLogs($event)" (changedState)="getAvailableContainers()"></container>
     </ion-list>
 
     <div *ngIf="container_to_show_stats">
       <stats [container]="container_to_show_stats"></stats>
+    </div>
+
+    <div *ngIf="container_to_show_logs">
+      <logs [container]="container_to_show_logs"></logs>
     </div>
 
   </div>

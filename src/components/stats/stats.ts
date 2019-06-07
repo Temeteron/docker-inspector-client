@@ -7,28 +7,35 @@ import { ApiProvider } from "../../providers/api/api";
   templateUrl: 'stats.html'
 })
 export class StatsComponent {
-  @Input() container: any = null;
-  stats: any = null;
+  @Input() container: any = null;        // INPUT OF COMPONENT
+  stats: any = null;                     // STATS OBJECT
 
   constructor(public api: ApiProvider) {
-  	this.getStats();
+    console.info('Hello StatsComponent Component');
+    this.getStats();
 
-  	setInterval(() => {
+    // GET STATS EVERY 5 SECONDS
+    setInterval(() => {
         this.getStats();
     }, 5000);
   }
 
+///////////////////////////////////////////////////////////////////////////
+// GET STATS FOR RUNNING CONTAINER
+///////////////////////////////////////////////////////////////////////////
   getStats() {
-  	if (this.container) {
-	  	this.api.getStatsOfContainer(this.container.Id).subscribe(res => {
-	  		console.log("Got new Stats");
-	  		res.cpu_stats.cpu_usage.total_usage = this.filterCpuValue(res);
-	  		this.stats = res;
-	  	});
-  	}
+    // CHECK IF CONTAINER IS PASSED
+    if (this.container) {
+        // CALL TO SERVER
+        this.api.getStatsOfContainer(this.container.Id).subscribe(res => {
+            this.stats = res;
+        },
+          err => {
+            // DEBUG MESSAGE
+            console.error('Error getting stats');
+          }
+        );
+    }
   }
 
-  filterCpuValue(res) {
-  	return res.cpu_stats.cpu_usage.total_usage / 10000000000;
-  }
 }

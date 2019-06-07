@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NavController, NavParams, LoadingController } from 'ionic-angular';
+import { NavController, LoadingController } from 'ionic-angular';
 import { ApiProvider } from "../../providers/api/api";
 import { HomePage } from "../../pages/home/home";
 
@@ -9,17 +9,22 @@ import { HomePage } from "../../pages/home/home";
   templateUrl: 'container.html'
 })
 export class ContainerComponent {
-  @Input() container: any;
-  @Output() stats = new EventEmitter<any>();
-  @Output() changedState = new EventEmitter<boolean>();
+  @Input() container: any;                                      // CONTAINER OBJECTS PASSED FROM PARENT
+  @Output() stats = new EventEmitter<any>();                    // VAR TO COMMUNICATE WITH PAREMT ABOUT STATS
+  @Output() logs = new EventEmitter<any>();                     // VAR TO COMMUNICATE WITH PAREMT ABOUT LOGS
+  @Output() changedState = new EventEmitter<boolean>();         // VAR TO COMMUNICATE WITH PARENT BECAUSE STATE CHANGED
+
   colorStats: string = 'dark';
   activeStats: boolean = false;
-  loader: any = null;
+  activeLogs: boolean = false;
+  loader: any = null;                                           // LOADER VAR FOR ASYNC REQUESTS
 
-  constructor(public navParams: NavParams, public navCtrl: NavController, public api: ApiProvider, public loadingCtrl: LoadingController) {
+  constructor(public api: ApiProvider, public loadingCtrl: LoadingController) {}
 
-  }
-
+///////////////////////////////////////////////////////////////////////////
+// CHECK IF CONTAINER IS RUNNING, SO THAT WE CAN 
+// GIVE THE USER BUTTONS TO ACTIVATE STATS OR LOGS
+///////////////////////////////////////////////////////////////////////////
   checkRunning(state) {
     if (state == 'running') {
       return true;
@@ -28,55 +33,117 @@ export class ContainerComponent {
     }
   }
 
-  toggleStats(activate) {
-    this.activeStats = activate;
+///////////////////////////////////////////////////////////////////////////
+// EMIT EVENT TO INFORM PARENT THAT STATS WAS TOGGLED,
+// EITHER BY CLICKING BUTTON OR BY STOPPING THE CONTAINER
+///////////////////////////////////////////////////////////////////////////
+  toggleStats(fun) {
+    // console.info(fun+' Stats');
+    // this.activeStats = activate;
     // this.setColorStats();
     let statsObj = {
       "container": this.container,
-      "active": this.activeStats
+      "fun": fun
     }
 
     this.stats.emit(statsObj);
   }
 
+///////////////////////////////////////////////////////////////////////////
+// EMIT EVENT TO INFORM PARENT THAT LOGS WAS TOGGLED,
+// EITHER BY CLICKING BUTTON OR BY STOPPING THE CONTAINER
+///////////////////////////////////////////////////////////////////////////
+  toggleLogs(fun) {
+    // console.info(fun+' Logs');
+    // this.activeLogs = activate;
+    // this.setColorStats();
+    let logsObj = {
+      "container": this.container,
+      "fun": fun
+    }
+
+    this.logs.emit(logsObj);
+  }
+
+///////////////////////////////////////////////////////////////////////////
+// START CONTAINER
+///////////////////////////////////////////////////////////////////////////
   start() {
+    // SHOW LOADER
     this.presentLoading();
+
+    // CALL TO SERVER
     this.api.startContainer(this.container.Id).subscribe(res => {
+        // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
         this.stateChanged();
+        //DISMISS LOADER
         this.dismissInitLoader();
     },
       err => {
+        // DEBUG MESSAGE
+        console.error("Error start: " + err);
+        //DISMISS LOADER
         this.dismissInitLoader();
-        console.log("Error start: " + err);
     });
   }
 
+///////////////////////////////////////////////////////////////////////////
+// STOP CONTAINER
+///////////////////////////////////////////////////////////////////////////
   stop() {
+    // SHOW LOADER
     this.presentLoading();
+
+    // CALL TO SERVER
     this.api.stopContainer(this.container.Id).subscribe(res => {
-        this.toggleStats(false);
+        // DEACTIVATE STATS-LOGS BECAUSE THERE ARE NO STATS-LOGS
+        //WHEN CONTAINER IS NOT RUNNING
+        this.toggleStats('stop');
+        this.toggleLogs('stop');
+
+        // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
         this.stateChanged();
+        //DISMISS LOADER
         this.dismissInitLoader();
     },
       err => {
+        // DEBUG MESSAGE
+        console.error("Error stop: " + err);
+        //DISMISS LOADER
         this.dismissInitLoader();
-        console.log("Error stop: " + err);
     });
   }
 
+///////////////////////////////////////////////////////////////////////////
+// DELETE CONTAINER, IF IT IS RUNNING
+// NOTHING WILL HAPPEN, EMPTY RESPONSE FROM SERVER
+///////////////////////////////////////////////////////////////////////////
   delete() {
+    // SHOW LOADER
     this.presentLoading();
+
+    // CALL TO SERVER
     this.api.deleteContainer(this.container.Id).subscribe(res => {
+        // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
         this.stateChanged();
+        //DISMISS LOADER
         this.dismissInitLoader();
     },
       err => {
+        // DEBUG MESSAGE
+        console.error("Error delete: " + err);
+        //DISMISS LOADER
         this.dismissInitLoader();
-        console.log("Error delete: " + err);
     });
   }
 
+
+///////////////////////////////////////////////////////////////////////////
+// EMIT EVENT TO PARENT THAT
+// STATE WAS CHANGED (RUNNING, EXITED, CREATED)
+///////////////////////////////////////////////////////////////////////////
   stateChanged() {
+    // DEBUG MESSAGE
     console.log("stateChanged");
     this.changedState.emit(true);
   }
@@ -86,6 +153,11 @@ export class ContainerComponent {
   //   console.log('Color: ' + this.colorStats);
   // }
 
+////////////////////////////// PAGE HELPERS ////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////
+// SHOW LOADING POPUP
+///////////////////////////////////////////////////////////////////////////
   presentLoading() {
     this.loader = this.loadingCtrl.create({
       content: "Please wait...",
@@ -94,10 +166,9 @@ export class ContainerComponent {
     this.loader.present();
   }
 
-  // refreshHomePage() {
-  //   this.navCtrl.setRoot(HomePage);
-  // }
-
+///////////////////////////////////////////////////////////////////////////
+// DISMISS LOADER POPUP
+///////////////////////////////////////////////////////////////////////////
   dismissInitLoader() {
     if (this.loader) {
       this.loader.dismiss();
