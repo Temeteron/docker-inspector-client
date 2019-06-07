@@ -44,7 +44,7 @@ The client part of a web based tool to interact and monitor docker containers
 
 6) Interface screenshot
 
-![alt text](https://github.com/Temeteron/docker_inspector_client/interface.png)
+![alt text](https://github.com/Temeteron/docker_inspector_client/blob/master/interaface.png)
 
 ## Get started
 ```
