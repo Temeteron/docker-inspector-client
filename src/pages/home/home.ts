@@ -11,6 +11,8 @@ import { ModalPage } from '../modal/modal';
   templateUrl: 'home.html'
 })
 export class HomePage {
+  const TIME_TO_REFRESH: number = 2000;      // CONSTANT THAT INDICADES HOW OFTEN WE REFRESH CONTAINERS STATE
+
   containers: Array<any> = [];               // CONTAINS ALL AVAILABLE CONTAINERS
   images: Array<any> = [];                   // CONTAINS ALL AVAILABLE IMAGES
   load: boolean = false;                     // BOOLEAN TO SHOW LOADER WHEN ASYNC FUNCTION IS CALLED
@@ -20,7 +22,7 @@ export class HomePage {
 
   constructor( public api: ApiProvider, public modalCtrl: ModalController, private alertCtrl: AlertController) {
     // GET CONTAINERS AND IMAGES
-    this.getAvailableContainers();
+    this.refreshContainers();
     this.getAvailableImages();
   }
 
@@ -50,7 +52,7 @@ export class HomePage {
         // STOP LOAD ICON
         setTimeout(() => {
           this.load = false;
-        }, 2000);
+        }, this.TIME_TO_REFRESH);
 
     },
       err => {
@@ -58,10 +60,10 @@ export class HomePage {
         // STOP LOAD ICON
         setTimeout(() => {
           this.load = false;
-        }, 2000);
+        }, this.TIME_TO_REFRESH);
 
         // DEBUG MESSAGE
-        console.error("ERROR while getListOfContainers: " + JSON.stringify(err));
+        console.error("Error while getListOfContainers: " + JSON.stringify(err));
 
         // ERROR MESSAGE TO SHOW
         let msg = `Error while getting list of containers. Status: ${err.status}.`;
@@ -70,11 +72,25 @@ export class HomePage {
   }
 
   refreshContainers() {
-    this.getAvailableContainers();
-    
-    setTimeout(() => {
-        this.refreshContainers();
-    }, 2000);
+    console.log('refreshContainers');
+    this.api.getListOfContainers().subscribe(res => {
+        // DEBUG MESSAGE
+        // console.log('Res getListOfContainers: ' + JSON.stringify(res));
+
+        // EMPTY CONTAINERS LIST
+        this.containers = [];
+
+        // MAP RESULT
+        res.map(cont => {
+            this.containers.push(cont);
+        });
+
+
+        // STOP LOAD ICON
+        // setTimeout(() => {
+        //   this.refreshContainers();
+        // }, this.TIME_TO_REFRESH);
+    });
   }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -95,7 +111,7 @@ export class HomePage {
     },
       err => {
         // DEBUG MESSAGE
-        console.error("ERROR while getListOfImages: " + JSON.stringify(err));
+        console.error("Error while getListOfImages: " + JSON.stringify(err));
 
         // ERROR MESSAGE TO SHOW
         let msg = `Error while getting list of images. Status: ${err.status}.`;
@@ -152,11 +168,17 @@ export class HomePage {
     console.log('Fun: '+ stateObj.fun);
     // IF STOP DISABLE STATS,LOGS IF WERE ENABLED FOR THAT CONTAINER
     if (stateObj.fun == 'stop') {
-      this.container_to_show_stats = (stateObj.container.Id == this.container_to_show_stats.Id) ? null : this.container_to_show_stats;
-      this.container_to_show_logs = (stateObj.container.Id == this.container_to_show_logs.Id) ? null : this.container_to_show_logs;
+      this.container_to_show_stats = this.assignDeactivateStatsLogs(stateObj.container, this.container_to_show_stats);
+      this.container_to_show_logs = this.assignDeactivateStatsLogs(stateObj.container, this.container_to_show_logs);
     }
 
     this.getAvailableContainers();
+  }
+
+  // HELP FUNCTION TO DEACTIVATE STATS-LOGS
+  // COMPONENT IF SELECTED CONTAINER STOPPED
+  assignDeactivateStatsLogs(container, component) {
+    return (component ? ((container.Id == component.Id) ? null : component) : null);
   }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -168,7 +190,6 @@ export class HomePage {
 
     // CHECK IF COMPONENT 'STATS' CONTAINS THE SAME COMNTAINER
     // IF YES, DISABLE 'STATS' COMPONET
-
     if (this.container_to_show_stats && (container.Id == this.container_to_show_stats.Id)) {
       // DEBUG MESSAGE
       console.log("Already Showing stats for this container. Will disable");
@@ -184,7 +205,6 @@ export class HomePage {
       setTimeout(() => {
         this.container_to_show_stats = container;
       }, 10);
-
     }
   }
 
