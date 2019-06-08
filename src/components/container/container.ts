@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NavController, LoadingController } from 'ionic-angular';
+import { LoadingController } from 'ionic-angular';
 import { ApiProvider } from "../../providers/api/api";
-import { HomePage } from "../../pages/home/home";
-
 
 @Component({
   selector: 'container',
