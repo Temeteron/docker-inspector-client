@@ -32,34 +32,11 @@ export class ContainerComponent {
   }
 
 ///////////////////////////////////////////////////////////////////////////
-// EMIT EVENT TO INFORM PARENT THAT STATS WAS TOGGLED,
-// EITHER BY CLICKING BUTTON OR BY STOPPING THE CONTAINER
+// EMIT EVENT TO INFORM PARENT THAT STATS/LOGS
+// WAS TOGGLED, BY CLICKING BUTTONS
 ///////////////////////////////////////////////////////////////////////////
-  toggleStats() {
-    // console.info(fun+' Stats');
-    // this.activeStats = activate;
-    // this.setColorStats();
-    // let statsObj = {
-    //   "container": this.container,
-    //   "fun": fun
-    // }
-
-    this.stats.emit(this.container);
-  }
-
-///////////////////////////////////////////////////////////////////////////
-// EMIT EVENT TO INFORM PARENT THAT LOGS WAS TOGGLED,
-// EITHER BY CLICKING BUTTON OR BY STOPPING THE CONTAINER
-///////////////////////////////////////////////////////////////////////////
-  toggleLogs() {
-    // console.info(fun+' Logs');
-    // this.activeLogs = activate;
-    // this.setColorStats();
-    // let logsObj = {
-    //   "container": this.container,
-    // }
-
-    this.logs.emit(this.container);
+  toggleStatsLogs(toggleComponent) {
+    this[toggleComponent].emit(this.container);
   }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -97,11 +74,6 @@ export class ContainerComponent {
     this.api.stopContainer(this.container.Id).subscribe(res => {
         // DEBUG MESSAGE
         console.log('Res stopContainer: ' + JSON.stringify(res));
-
-        // // DEACTIVATE STATS-LOGS BECAUSE THERE ARE NO STATS-LOGS
-        // //WHEN CONTAINER IS NOT RUNNING
-        // this.toggleStats('stop');
-        // this.toggleLogs('stop');
 
         // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
         this.stateChanged('stop');
@@ -156,17 +128,14 @@ export class ContainerComponent {
   stateChanged(fun) {
     // DEBUG MESSAGE
     console.log("stateChanged");
+
     let stateObj = {
       "container": this.container,
       "fun": fun
     }
+
     this.changedState.emit(stateObj);
   }
-
-  // setColorStats() {
-  //   this.colorStats = this.activeStats ? 'secondary' : 'dark';
-  //   console.log('Color: ' + this.colorStats);
-  // }
 
 ////////////////////////////// PAGE HELPERS ////////////////////////////////////////
 
