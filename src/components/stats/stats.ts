@@ -11,7 +11,6 @@ export class StatsComponent {
   stats: any = null;                     // STATS OBJECT
 
   constructor(public api: ApiProvider) {
-    console.info('Hello StatsComponent Component');
     this.getStats();
 
     // GET STATS EVERY 5 SECONDS
