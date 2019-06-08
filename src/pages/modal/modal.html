@@ -45,11 +45,9 @@
 
     <div class="align-center">
       <h6>Examples</h6>
-      <ul>
-        <li>chentex/random-logger:latest</li>
-        <li>enhariharan/infinite-loop:latest</li>
-        <li>hello-world:latest</li>
-      </ul>
+      <div *ngFor="let name of example_images;">
+        <div (click)="selectImageToPull(name)" class="cursorCs">{{ name }}</div>
+      </div>
     </div>
 
     <div  class="align-center">
