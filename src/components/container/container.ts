@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { LoadingController } from 'ionic-angular';
+import { AlertController, LoadingController } from 'ionic-angular';
 import { ApiProvider } from "../../providers/api/api";
 
 @Component({
@@ -8,16 +8,16 @@ import { ApiProvider } from "../../providers/api/api";
 })
 export class ContainerComponent {
   @Input() container: any;                                      // CONTAINER OBJECTS PASSED FROM PARENT
-  @Output() stats = new EventEmitter<any>();                    // VAR TO COMMUNICATE WITH PAREMT ABOUT STATS
-  @Output() logs = new EventEmitter<any>();                     // VAR TO COMMUNICATE WITH PAREMT ABOUT LOGS
-  @Output() changedState = new EventEmitter<boolean>();         // VAR TO COMMUNICATE WITH PARENT BECAUSE STATE CHANGED
+  @Output() stats = new EventEmitter<Object>();                    // VAR TO COMMUNICATE WITH PAREMT ABOUT STATS
+  @Output() logs = new EventEmitter<Object>();                     // VAR TO COMMUNICATE WITH PAREMT ABOUT LOGS
+  @Output() changedState = new EventEmitter<Object>();         // VAR TO COMMUNICATE WITH PARENT BECAUSE STATE CHANGED
 
   colorStats: string = 'dark';
   activeStats: boolean = false;
   activeLogs: boolean = false;
   loader: any = null;                                           // LOADER VAR FOR ASYNC REQUESTS
 
-  constructor(public api: ApiProvider, public loadingCtrl: LoadingController) {}
+  constructor(public api: ApiProvider, public loadingCtrl: LoadingController, private alertCtrl: AlertController) {}
 
 ///////////////////////////////////////////////////////////////////////////
 // CHECK IF CONTAINER IS RUNNING, SO THAT WE CAN 
@@ -35,32 +35,31 @@ export class ContainerComponent {
 // EMIT EVENT TO INFORM PARENT THAT STATS WAS TOGGLED,
 // EITHER BY CLICKING BUTTON OR BY STOPPING THE CONTAINER
 ///////////////////////////////////////////////////////////////////////////
-  toggleStats(fun) {
+  toggleStats() {
     // console.info(fun+' Stats');
     // this.activeStats = activate;
     // this.setColorStats();
-    let statsObj = {
-      "container": this.container,
-      "fun": fun
-    }
+    // let statsObj = {
+    //   "container": this.container,
+    //   "fun": fun
+    // }
 
-    this.stats.emit(statsObj);
+    this.stats.emit(this.container);
   }
 
 ///////////////////////////////////////////////////////////////////////////
 // EMIT EVENT TO INFORM PARENT THAT LOGS WAS TOGGLED,
 // EITHER BY CLICKING BUTTON OR BY STOPPING THE CONTAINER
 ///////////////////////////////////////////////////////////////////////////
-  toggleLogs(fun) {
+  toggleLogs() {
     // console.info(fun+' Logs');
     // this.activeLogs = activate;
     // this.setColorStats();
-    let logsObj = {
-      "container": this.container,
-      "fun": fun
-    }
+    // let logsObj = {
+    //   "container": this.container,
+    // }
 
-    this.logs.emit(logsObj);
+    this.logs.emit(this.container);
   }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -72,14 +71,16 @@ export class ContainerComponent {
 
     // CALL TO SERVER
     this.api.startContainer(this.container.Id).subscribe(res => {
+        console.log('Res startContainer: ' + JSON.stringify(res));
+
         // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
-        this.stateChanged();
+        this.stateChanged('start');
         //DISMISS LOADER
         this.dismissInitLoader();
     },
       err => {
         // DEBUG MESSAGE
-        console.error("Error start: " + err);
+        console.error("Error startContainer: " + JSON.stringify(err));
         //DISMISS LOADER
         this.dismissInitLoader();
     });
@@ -94,19 +95,23 @@ export class ContainerComponent {
 
     // CALL TO SERVER
     this.api.stopContainer(this.container.Id).subscribe(res => {
-        // DEACTIVATE STATS-LOGS BECAUSE THERE ARE NO STATS-LOGS
-        //WHEN CONTAINER IS NOT RUNNING
-        this.toggleStats('stop');
-        this.toggleLogs('stop');
+        // DEBUG MESSAGE
+        console.log('Res stopContainer: ' + JSON.stringify(res));
+
+        // // DEACTIVATE STATS-LOGS BECAUSE THERE ARE NO STATS-LOGS
+        // //WHEN CONTAINER IS NOT RUNNING
+        // this.toggleStats('stop');
+        // this.toggleLogs('stop');
 
         // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
-        this.stateChanged();
+        this.stateChanged('stop');
         //DISMISS LOADER
         this.dismissInitLoader();
     },
       err => {
         // DEBUG MESSAGE
-        console.error("Error stop: " + err);
+        console.error("Error stopContainer: " + JSON.stringify(err));
+
         //DISMISS LOADER
         this.dismissInitLoader();
     });
@@ -122,16 +127,24 @@ export class ContainerComponent {
 
     // CALL TO SERVER
     this.api.deleteContainer(this.container.Id).subscribe(res => {
+      // DEBUG MESSAGE
+        console.log('Res deleteContainer: ' + JSON.stringify(res));
+
         // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
-        this.stateChanged();
+        this.stateChanged('delete');
         //DISMISS LOADER
         this.dismissInitLoader();
     },
       err => {
         // DEBUG MESSAGE
-        console.error("Error delete: " + err);
+        console.error("Error deleteContainer: " + JSON.stringify(err));
+
         //DISMISS LOADER
         this.dismissInitLoader();
+
+        // ERROR MESSAGE TO SHOW
+        let msg = `Error: ${err.status}. ${err.statusText}. Cannot delete while running.`
+        this.alertGlobal(msg);
     });
   }
 
@@ -140,10 +153,14 @@ export class ContainerComponent {
 // EMIT EVENT TO PARENT THAT
 // STATE WAS CHANGED (RUNNING, EXITED, CREATED)
 ///////////////////////////////////////////////////////////////////////////
-  stateChanged() {
+  stateChanged(fun) {
     // DEBUG MESSAGE
     console.log("stateChanged");
-    this.changedState.emit(true);
+    let stateObj = {
+      "container": this.container,
+      "fun": fun
+    }
+    this.changedState.emit(stateObj);
   }
 
   // setColorStats() {
@@ -173,4 +190,17 @@ export class ContainerComponent {
       this.loader = null;
     }
   }
+
+///////////////////////////////////////////////////////////////////////////
+// ALERT MESSAGE FOR ERRORS
+///////////////////////////////////////////////////////////////////////////
+  alertGlobal(msg) {
+    let alert = this.alertCtrl.create({
+      title: 'TRADELINE',
+      subTitle: msg,
+      buttons: ['ok']
+    });
+    alert.present();
+  }
+
 }

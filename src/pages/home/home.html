@@ -9,7 +9,7 @@
   <div class="template-center">
 
     <ion-list *ngFor="let cont of containers;">
-      <container [container]="cont" (stats)="onStats($event)" (logs)="onLogs($event)" (changedState)="getAvailableContainers()"></container>
+      <container [container]="cont" (stats)="onStats($event)" (logs)="onLogs($event)" (changedState)="stateOfContainerChanged($event)"></container>
     </ion-list>
 
     <div *ngIf="container_to_show_stats">

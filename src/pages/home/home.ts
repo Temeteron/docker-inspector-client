@@ -24,15 +24,20 @@ export class HomePage {
     this.getAvailableImages();
   }
 
+//////////// TO DO -GET CONTAINERS EVERY 2 SECONDS WITHOUT LOSING EVENTS//////
+
 ///////////////////////////////////////////////////////////////////////////
 // GET ALL CONTAINERS 
 ///////////////////////////////////////////////////////////////////////////
   getAvailableContainers() {
+    console.log("getAvailableContainers");
     // ACTIVATE LOAD ICON
     this.load = true;
 
     this.api.getListOfContainers().subscribe(res => {
-        
+        // DEBUG MESSAGE
+        // console.log('Res getListOfContainers: ' + JSON.stringify(res));
+
         // EMPTY CONTAINERS LIST
         this.containers = [];
 
@@ -41,9 +46,6 @@ export class HomePage {
             this.containers.push(cont);
         });
 
-        // setTimeout(() => {
-        //     this.getAvailableContainers();
-        // }, 2000);
 
         // STOP LOAD ICON
         setTimeout(() => {
@@ -52,9 +54,6 @@ export class HomePage {
 
     },
       err => {
-        // setTimeout(() => {
-        //     this.getAvailableContainers();
-        // }, 2000);
 
         // STOP LOAD ICON
         setTimeout(() => {
@@ -63,9 +62,19 @@ export class HomePage {
 
         // DEBUG MESSAGE
         console.error("ERROR while getListOfContainers: " + JSON.stringify(err));
-        let msg = "Error while getting list of containers. Try again.";
+
+        // ERROR MESSAGE TO SHOW
+        let msg = `Error while getting list of containers. Status: ${err.status}.`;
         this.alertGlobal(msg);
     });
+  }
+
+  refreshContainers() {
+    this.getAvailableContainers();
+    
+    setTimeout(() => {
+        this.refreshContainers();
+    }, 2000);
   }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -73,7 +82,9 @@ export class HomePage {
 ///////////////////////////////////////////////////////////////////////////
   getAvailableImages() {
     this.api.getListOfImages().subscribe(res => {
-        
+        // DEBUG MESSAGE
+        // console.log('Res getListOfImages: ' + JSON.stringify(res));
+
         // EMPTY IMAGES LIST
         this.images = [];
 
@@ -83,10 +94,11 @@ export class HomePage {
         });
     },
       err => {
-
         // DEBUG MESSAGE
-        console.error("ERROR while getListOfContainers: " + JSON.stringify(err));
-        let msg = "Error while getting list of images. Try again.";
+        console.error("ERROR while getListOfImages: " + JSON.stringify(err));
+
+        // ERROR MESSAGE TO SHOW
+        let msg = `Error while getting list of images. Status: ${err.status}.`;
         this.alertGlobal(msg);
     });
   }
@@ -133,92 +145,73 @@ export class HomePage {
 /////////////////// COMMUNICATION WITH CONTAINER COMPONENTS  ////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////
+// CONTAINER'S STATE CHANGED (START, STOP, DELETE)
+///////////////////////////////////////////////////////////////////////////
+  stateOfContainerChanged(stateObj) {
+    console.log('stateOfContainerChanged');
+    console.log('Fun: '+ stateObj.fun);
+    // IF STOP DISABLE STATS,LOGS IF WERE ENABLED FOR THAT CONTAINER
+    if (stateObj.fun == 'stop') {
+      this.container_to_show_stats = (stateObj.container.Id == this.container_to_show_stats.Id) ? null : this.container_to_show_stats;
+      this.container_to_show_logs = (stateObj.container.Id == this.container_to_show_logs.Id) ? null : this.container_to_show_logs;
+    }
+
+    this.getAvailableContainers();
+  }
+
+///////////////////////////////////////////////////////////////////////////
 // EVENT EMMITER TO CATCH TRIGGER OF STATS FROM EACH COMPONENT
 ///////////////////////////////////////////////////////////////////////////
-  onStats(contStats) {
+  onStats(container) {
     // DEBUG MESSAGE
     console.info('onStats');
 
-    // CHECK IF COMPONENT 'STATS' IS EMPTY
-    if (this.container_to_show_stats == null) {
-      // CHECK IF STATS ICON OF COMPONENT WAS CLICKED 'toggle',
-      // IF YES ACTIVATE STATS COMPONENT BY PASSING CONTAINER
-      if (contStats.fun == 'toggle') {
-        // DEBUG MESSAGE
-        console.log("Activate logs on container: " + contStats.container.Names[0]);
+    // CHECK IF COMPONENT 'STATS' CONTAINS THE SAME COMNTAINER
+    // IF YES, DISABLE 'STATS' COMPONET
 
-        // ASSIGN STATS COMPONENT
-        this.container_to_show_stats = contStats.container;
-      }
+    if (this.container_to_show_stats && (container.Id == this.container_to_show_stats.Id)) {
+      // DEBUG MESSAGE
+      console.log("Already Showing stats for this container. Will disable");
+      
+      // EMPTY 'STATS' COMPONENT
+      this.container_to_show_stats = null;
     } else {
-      // COMPONENT 'STATS' IS NON-EMPTY
-      // CHECK IF COMPONENT 'STATS' CONTAINS THE SAME COMNTAINER
-      // IF YES, DISABLE 'STATS' COMPONET
-      if (contStats.container.Id == this.container_to_show_stats.Id) {
-        // DEBUG MESSAGE
-        console.log("Already Showing logs for this container. Will disable");
-        
-        // EMPTY 'STATS' COMPONENT
-        this.container_to_show_stats = null;
-      } else {
-        // TWO CASES HERE, FIRST IS THAT THE 'STATS' ICON WAS TOGGLED
-        // IN WHICH CASE WE ASSIGN CONTAINER TO 'STATS'
-        if (contStats.fun == 'toggle') {
-          // DEBUG MESSAGE
-          console.log("Activate logs on container: " + contStats.container.Names[0]);
-          
-          // EMPTY AND ASSIGN AFTER 10MS TO RE-INITIALIZE
-          this.container_to_show_stats = null;
-          setTimeout(() => {
-            this.container_to_show_stats = contStats.container;
-          }, 10);
-        }
-      }
+      // DEBUG MESSAGE
+      console.log("Activate stats on container: " + container.Names[0]);
+      
+      // EMPTY AND ASSIGN AFTER 10MS TO RE-INITIALIZE
+      this.container_to_show_stats = null;
+      setTimeout(() => {
+        this.container_to_show_stats = container;
+      }, 10);
+
     }
   }
 
 ///////////////////////////////////////////////////////////////////////////
 // EVENT EMMITER TO CATCH TRIGGER OF LOGS FROM EACH COMPONENT
 ///////////////////////////////////////////////////////////////////////////
-  onLogs(contLogs) {
+  onLogs(container) {
     // DEBUG MESSAGE
     console.info('onLogs');
 
-    // CHECK IF COMPONENT 'LOGS' IS EMPTY
-    if (this.container_to_show_logs == null) {
-      // CHECK IF LOGS ICON OF COMPONENT WAS CLICKED 'toggle',
-      // IF YES ACTIVATE LOGS COMPONENT BY PASSING CONTAINER
-      if (contLogs.fun == 'toggle') {
-        // DEBUG MESSAGE
-        console.log("Activate logs on container: " + contLogs.container.Names[0]);
+    // CHECK IF COMPONENT 'LOGS' CONTAINS THE SAME COMNTAINER
+    // IF YES, DISABLE 'LOGS' COMPONET
+    if (this.container_to_show_logs && (container.Id == this.container_to_show_logs.Id)) {
+      // DEBUG MESSAGE
+      console.log("Already Showing logs for this container. Will disable");
 
-        // ASSIGN LOGS COMPONENT
-        this.container_to_show_logs = contLogs.container;
-      }
+      // EMPTY 'LOGS' COMPONENT
+      this.container_to_show_logs = null;
     } else {
-      // COMPONENT 'LOGS' IS NON-EMPTY
-      // CHECK IF COMPONENT 'LOGS' CONTAINS THE SAME COMNTAINER
-      // IF YES, DISABLE 'LOGS' COMPONET
-      if (contLogs.container.Id == this.container_to_show_logs.Id) {
-        // DEBUG MESSAGE
-        console.log("Already Showing logs for this container. Will disable");
+      // DEBUG MESSAGE
+      console.log("Activate logs on container: " + container.Names[0]);
 
-        // EMPTY 'LOGS' COMPONENT
-        this.container_to_show_logs = null;
-      } else {
-        // TWO CASES HERE, FIRST IS THAT THE 'LOGS' ICON WAS TOGGLED
-        // IN WHICH CASE WE ASSIGN CONTAINER TO 'LOGS'
-        if (contLogs.fun == 'toggle') {
-          // DEBUG MESSAGE
-          console.log("Activate logs on container: " + contLogs.container.Names[0]);
-
-          // EMPTY AND ASSIGN AFTER 10MS TO RE-INITIALIZE
-          this.container_to_show_logs = null;
-          setTimeout(() => {
-            this.container_to_show_logs = contLogs.container;
-          }, 10);
-        }
-      }
+      // EMPTY AND ASSIGN AFTER 10MS TO RE-INITIALIZE
+      this.container_to_show_logs = null;
+      setTimeout(() => {
+        this.container_to_show_logs = container;
+      }, 10);
     }
   }
 
