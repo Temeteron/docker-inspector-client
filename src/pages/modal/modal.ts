@@ -63,7 +63,7 @@ export class ModalPage {
   }
 
 ///////////////////////////////////////////////////////////////////////////
-// CREATE CONTAINER FROM GIVER IMAGE
+// CREATE CONTAINER FROM GIVEN IMAGE
 ///////////////////////////////////////////////////////////////////////////
   createContainer(img_name) {
     // BECAUSE A NEW CONTAINER WAS CREATED INFORM PARENT TO 
@@ -110,6 +110,7 @@ export class ModalPage {
 // DELETE IMAGE
 ///////////////////////////////////////////////////////////////////////////
   deleteImage(img_name) {
+    console.log('deleteImage: ' + img_name);
     // BECAUSE A NEW CONTAINER WAS CREATED INFORM PARENT TO 
     // GET THE NEW LIST OF CONTAINERS
     let objMsg = {
@@ -118,23 +119,24 @@ export class ModalPage {
       'message': ''
     };
 
+
     // SHOW LOADER
     this.presentLoading();
-    this.api.createContainer(img_name.toString()).subscribe(res => {
+    this.api.deleteImage(img_name.toString()).subscribe(res => {
         // DEBUG MESSAGE
-        console.log('Res createContainer: ' + JSON.stringify(res));
+        console.log('Res deleteImage: ' + JSON.stringify(res));
         // DISMISS LOADER
         this.dismissLoader();
 
         // MESSAGE TO SHOW
-        objMsg.message = 'Container created';
+        objMsg.message = 'Image deleted';
 
         // DISMISS MODAL
         this.dismiss(objMsg);
     },
       err => {
         // DEBUG MESSAGE
-        console.error('Error createContainer: ' + JSON.stringify(err));
+        console.error('Error deleteImage: ' + JSON.stringify(err));
         // DISMISS LOADER
         this.dismissLoader();
 
