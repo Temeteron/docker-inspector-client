@@ -27,13 +27,15 @@ export class StatsComponent {
     if (this.container) {
         // CALL TO SERVER
         this.api.getStatsOfContainer(this.container.Id).subscribe(res => {
+            // DEBUG MESSAGE
+            // console.log('Res getStatsOfContainer: ' + JSON.stringify(res));
+
             this.stats = res;
         },
           err => {
             // DEBUG MESSAGE
-            console.error('Error getting stats');
-          }
-        );
+            console.error("Error while getStatsOfContainer: " + JSON.stringify(err));
+        });
     }
   }
 

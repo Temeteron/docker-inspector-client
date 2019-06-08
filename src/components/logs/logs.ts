@@ -33,17 +33,20 @@ export class LogsComponent {
     if (this.container) {
         // CALL TO SERVER
         this.api.getLogsOfContainer(this.container.Id).subscribe(res => {
-            // UPDATE DATE
-            this.date = new Date();
-            // IF LOG IS NON-EMPTY CONCAT OUTPUT
-            if (res) {
-                this.addToLogs(res.split('\n'));
-            }
+          // DEBUG MESSAGE
+          // console.log('Res getLogsOfContainer: ' + JSON.stringify(res));
+
+          // UPDATE DATE
+          this.date = new Date();
+          // IF LOG IS NON-EMPTY CONCAT OUTPUT
+          if (res) {
+              this.addToLogs(res.split('\n'));
+          }
         },
           err => {
-            console.error('Error getting logs');
-          }
-        );
+            // DEBUG MESSAGE
+            console.error("Error while getLogsOfContainer: " + JSON.stringify(err));
+        });
     }
   }
 
@@ -53,7 +56,6 @@ export class LogsComponent {
   addToLogs(log) {
     let helpLogs = this.logs.concat(log);
     this.logs = helpLogs.slice(Math.max(helpLogs.length-10, 0));
-
   }
 
 ///////////////////////////////////////////////////////////////////////////
