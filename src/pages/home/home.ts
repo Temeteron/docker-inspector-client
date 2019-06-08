@@ -22,10 +22,6 @@ export class HomePage {
     // GET CONTAINERS AND IMAGES
     this.getAvailableContainers();
     this.getAvailableImages();
-
-    // setInterval(() => {
-    //     this.getAvailableContainers(false);
-    // }, 2000);
   }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -45,6 +41,10 @@ export class HomePage {
             this.containers.push(cont);
         });
 
+        // setTimeout(() => {
+        //     this.getAvailableContainers();
+        // }, 2000);
+
         // STOP LOAD ICON
         setTimeout(() => {
           this.load = false;
@@ -52,13 +52,16 @@ export class HomePage {
 
     },
       err => {
-        
+        // setTimeout(() => {
+        //     this.getAvailableContainers();
+        // }, 2000);
+
         // STOP LOAD ICON
         setTimeout(() => {
           this.load = false;
         }, 2000);
 
-        // ERROR MESSAGE FOR DEBUGGING
+        // DEBUG MESSAGE
         console.error("ERROR while getListOfContainers: " + JSON.stringify(err));
         let msg = "Error while getting list of containers. Try again.";
         this.alertGlobal(msg);
@@ -81,7 +84,7 @@ export class HomePage {
     },
       err => {
 
-        // ERROR MESSAGE FOR DEBUGGING
+        // DEBUG MESSAGE
         console.error("ERROR while getListOfContainers: " + JSON.stringify(err));
         let msg = "Error while getting list of images. Try again.";
         this.alertGlobal(msg);
@@ -101,13 +104,26 @@ export class HomePage {
     // ON DISMISS OF MODAL GET NEW AVAILABLE IMAGES (IF ANY WAS PULLED)
     // AND CONTAINERS LIST
     modal.onDidDismiss(data => {
-      // IF DATA IS TRUE, MEANS THAT AN IMAGE WAS PULLED,
-      // UPDATE IMAGES
+
       if (data) {
-        this.getAvailableImages();
+
+        // UPDATE IMAGES
+        if (data.load_images) {
+          this.getAvailableImages();
+        }
+
+        // UPPDATE CONTAINERS
+        if (data.load_containers) {
+          this.getAvailableContainers();
+        }
+
+        // SHOW INFO MESSAGE
+        if (data.message) {
+          this.alertGlobal(data.message);
+        }
+
       }
-      // UPPDATE CONTAINERS
-      this.getAvailableContainers();;
+
     });
 
     // SHOW MODAL
