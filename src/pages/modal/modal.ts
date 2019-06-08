@@ -36,7 +36,8 @@ export class ModalPage {
     this.presentLoading();
     this.api.pullImage(this.image_name).subscribe(res => {
         // DEBUG MESSAGE
-        console.log('Res pullImage: ' + JSON.stringify(res));
+        // console.log('Res pullImage: ' + JSON.stringify(res));
+
         // DISMISS LOADER
         this.dismissLoader();
 
@@ -49,6 +50,7 @@ export class ModalPage {
       err => {
         // DEBUG MESSAGE
         console.error('Error pullImage: ' + JSON.stringify(err));
+
         // DISMISS LOADER
         this.dismissLoader();
 
@@ -78,7 +80,8 @@ export class ModalPage {
     this.presentLoading();
     this.api.createContainer(img_name.toString()).subscribe(res => {
         // DEBUG MESSAGE
-        console.log('Res createContainer: ' + JSON.stringify(res));
+        // console.log('Res createContainer: ' + JSON.stringify(res));
+
         // DISMISS LOADER
         this.dismissLoader();
 
@@ -91,6 +94,7 @@ export class ModalPage {
       err => {
         // DEBUG MESSAGE
         console.error('Error createContainer: ' + JSON.stringify(err));
+
         // DISMISS LOADER
         this.dismissLoader();
 
@@ -124,7 +128,8 @@ export class ModalPage {
     this.presentLoading();
     this.api.deleteImage(img_name.toString()).subscribe(res => {
         // DEBUG MESSAGE
-        console.log('Res deleteImage: ' + JSON.stringify(res));
+        // console.log('Res deleteImage: ' + JSON.stringify(res));
+
         // DISMISS LOADER
         this.dismissLoader();
 
@@ -137,6 +142,7 @@ export class ModalPage {
       err => {
         // DEBUG MESSAGE
         console.error('Error deleteImage: ' + JSON.stringify(err));
+
         // DISMISS LOADER
         this.dismissLoader();
 
