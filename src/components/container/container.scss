@@ -7,15 +7,11 @@ container {
 		display: inline;
 	}
 
-	.parent-flex {
-		display: flex;
-		justify-content: center;
+	.alignTextCenter {
+		text-align: center;
 	}
 
-	.child-flex {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-direction: column;
+	.alignTextRight {
+		text-align: right;
 	}
 }

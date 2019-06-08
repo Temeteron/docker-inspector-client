@@ -1,20 +1,21 @@
-<ion-item class="parent-flex">
-	<div class="inline">
-		<b>Container:</b> {{ container.Names[0] }} - <b>Image:</b> {{ container.Image }}
-	</div>
+<ion-item>
+	<div class="flex-item-with-addons">
+		<div class="flex-main-item">
+			<b>Container:</b> {{ container.Names[0] }} - <b>Image:</b> {{ container.Image }}
+		</div>
 
-	<div class="inline">
-		&nbsp; <b>Status:</b> {{ container.State }}
-		<div *ngIf="checkRunning(container.State)" class="inline">
-			<ion-icon color="dark" class="cursorCs" name="stats" title="Stats" (click)="toggleStatsLogs('stats')" item-end></ion-icon>
-			<ion-icon color="primary" class="cursorCs" name="paper" title="Logs" (click)="toggleStatsLogs('logs')" item-end></ion-icon>
-		</div >
-	</div>
+		<div class="flex-main-item alignTextCenter">
+			<b>Status:</b> {{ container.State }}
+			<div *ngIf="checkRunning(container.State)" class="inline">
+				<ion-icon color="dark" class="cursorCs" name="stats" title="Stats" (click)="toggleStatsLogs('stats')"></ion-icon>
+				<ion-icon color="primary" class="cursorCs" name="paper" title="Logs" (click)="toggleStatsLogs('logs')"></ion-icon>
+			</div >
+		</div>
 
-	<div class="inline" item-end>
-		<ion-icon color="secondary" class="cursorCs" name="ios-magnet" title="Start" (click)="start()" item-end></ion-icon>
-		<ion-icon color="primary" class="cursorCs" name="hand" title="Stop" (click)="stop()" item-end></ion-icon>
-		<ion-icon color="danger" class="cursorCs" name="trash" title="Delete" (click)="delete()" item-end></ion-icon>
+		<div class="flex-main-item alignTextRight">
+			<ion-icon color="secondary" class="cursorCs" name="ios-magnet" title="Start" (click)="start()"></ion-icon>
+			<ion-icon color="primary" class="cursorCs" name="hand" title="Stop" (click)="stop()"></ion-icon>
+			<ion-icon color="danger" class="cursorCs" name="trash" title="Delete" (click)="delete()"></ion-icon>
+		</div>
 	</div>
-
 </ion-item>
