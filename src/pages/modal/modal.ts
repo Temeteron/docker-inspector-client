@@ -21,6 +21,48 @@ export class ModalPage {
   }
 
 ///////////////////////////////////////////////////////////////////////////
+// PULL IMAGE FROM REPOSITORY
+///////////////////////////////////////////////////////////////////////////
+  pullImage() {
+    // BECAUSE A NEW IMAGE WAS PULLED INFORM PARENT TO 
+    // GET THE NEW LIST OF IMAGES
+    let objMsg = {
+      'load_images': true,
+      'load_containers': false,
+      'message': ''
+    };
+
+    // SHOW LOADER
+    this.presentLoading();
+    this.api.pullImage(this.image_name).subscribe(res => {
+        // DEBUG MESSAGE
+        console.log('Res pullImage: ' + JSON.stringify(res));
+        // DISMISS LOADER
+        this.dismissLoader();
+
+        // CHECK IF THERE IS A WARNING AND RETURN MESSAGE
+        objMsg.message = (res.status == 'Warning') ? (`Warning. ${res.message}`) : (res[res.length-1].status);
+
+        // DISMISS MODAL
+        this.dismiss(objMsg);
+    },
+      err => {
+        // DEBUG MESSAGE
+        console.error('Error pullImage: ' + JSON.stringify(err));
+        // DISMISS LOADER
+        this.dismissLoader();
+
+        // ERROR MESSAGE TO SHOW
+        objMsg.message = `Error: ${err.status}. ${err.statusText}`;
+        // CHECK IF SERVER IS DOWN, IF YES DONT MAKE FURTHER REQUESTS
+        objMsg.load_images = err.status == 0 ? false : true;
+
+        // DISMISS MODAL
+        this.dismiss(objMsg);
+    });
+  }
+
+///////////////////////////////////////////////////////////////////////////
 // CREATE CONTAINER FROM GIVER IMAGE
 ///////////////////////////////////////////////////////////////////////////
   createContainer(img_name) {
@@ -62,12 +104,14 @@ export class ModalPage {
     });
   }
 
+  ////////////////////TO DOO////////////
+
 ///////////////////////////////////////////////////////////////////////////
-// PULL IMAGE FROM REPOSITORY
+// DELETE IMAGE
 ///////////////////////////////////////////////////////////////////////////
-  pullImage() {
-    // BECAUSE A NEW IMAGE WAS PULLED INFORM PARENT TO 
-    // GET THE NEW LIST OF IMAGES
+  deleteImage(img_name) {
+    // BECAUSE A NEW CONTAINER WAS CREATED INFORM PARENT TO 
+    // GET THE NEW LIST OF CONTAINERS
     let objMsg = {
       'load_images': true,
       'load_containers': false,
@@ -76,28 +120,28 @@ export class ModalPage {
 
     // SHOW LOADER
     this.presentLoading();
-    this.api.pullImage(this.image_name).subscribe(res => {
+    this.api.createContainer(img_name.toString()).subscribe(res => {
         // DEBUG MESSAGE
-        console.log('Res pullImage: ' + JSON.stringify(res));
+        console.log('Res createContainer: ' + JSON.stringify(res));
         // DISMISS LOADER
         this.dismissLoader();
 
-        // CHECK IF THERE IS A WARNING AND RETURN MESSAGE
-        objMsg.message = (res.status == 'Warning') ? (`Warning. ${res.message}`) : (res[res.length-1].status);
+        // MESSAGE TO SHOW
+        objMsg.message = 'Container created';
 
         // DISMISS MODAL
         this.dismiss(objMsg);
     },
       err => {
         // DEBUG MESSAGE
-        console.error('Error pullImage: ' + JSON.stringify(err));
+        console.error('Error createContainer: ' + JSON.stringify(err));
         // DISMISS LOADER
         this.dismissLoader();
 
         // ERROR MESSAGE TO SHOW
-        objMsg.message = `Error: ${err.status}. ${err.statusText}`;
+        objMsg.message = `Error ${err.status}: ${err.statusText}`;
         // CHECK IF SERVER IS DOWN, IF YES DONT MAKE FURTHER REQUESTS
-        objMsg.load_images = err.status == 0 ? false : true;
+        objMsg.load_containers = err.status == 0 ? false : true;
 
         // DISMISS MODAL
         this.dismiss(objMsg);
