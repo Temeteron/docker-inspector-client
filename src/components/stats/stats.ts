@@ -7,16 +7,15 @@ import { ApiProvider } from "../../providers/api/api";
   templateUrl: 'stats.html'
 })
 export class StatsComponent {
+  TIME_TO_REFRESH: number = 4000;      // CONSTANT THAT INDICADES HOW OFTEN WE REFRESH CONTAINERS STATE
   @Input() container: any = null;        // INPUT OF COMPONENT
   stats: any = null;                     // STATS OBJECT
+  loading: boolean = false;                     // BOOLEAN TO SHOW LOADER WHEN ASYNC FUNCTION IS CALLED
 
   constructor(public api: ApiProvider) {
-    this.getStats();
-
-    // GET STATS EVERY 5 SECONDS
-    setInterval(() => {
-        this.getStats();
-    }, 5000);
+    setTimeout(() => {
+      this.getStats();
+    }, 0);
   }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -25,17 +24,23 @@ export class StatsComponent {
   getStats() {
     // CHECK IF CONTAINER IS PASSED
     if (this.container) {
-        // CALL TO SERVER
-        this.api.getStatsOfContainer(this.container.Id).subscribe(res => {
-            // DEBUG MESSAGE
-            // console.log('Res getStatsOfContainer: ' + JSON.stringify(res));
+      this.loading = true;
+      // CALL TO SERVER
+      this.api.getStatsOfContainer(this.container.Id).subscribe(res => {
+          // DEBUG MESSAGE
+          // console.log('Res getStatsOfContainer: ' + JSON.stringify(res));
 
-            this.stats = res;
-        },
-          err => {
-            // DEBUG MESSAGE
-            console.error("Error while getStatsOfContainer: " + JSON.stringify(err));
-        });
+          this.stats = res;
+          this.loading = false;
+          setTimeout(() => {
+            this.getStats();
+          }, this.TIME_TO_REFRESH);
+      },
+        err => {
+          // DEBUG MESSAGE
+          this.loading = false;
+          console.error("Error while getStatsOfContainer: " + JSON.stringify(err));
+      });
     }
   }
 

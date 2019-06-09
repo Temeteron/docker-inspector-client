@@ -11,11 +11,11 @@ import { ModalPage } from '../modal/modal';
   templateUrl: 'home.html'
 })
 export class HomePage {
-  const TIME_TO_REFRESH: number = 2000;      // CONSTANT THAT INDICADES HOW OFTEN WE REFRESH CONTAINERS STATE
+  TIME_TO_REFRESH: number = 4000;      // CONSTANT THAT INDICADES HOW OFTEN WE REFRESH CONTAINERS STATE
 
   containers: Array<any> = [];               // CONTAINS ALL AVAILABLE CONTAINERS
   images: Array<any> = [];                   // CONTAINS ALL AVAILABLE IMAGES
-  load: boolean = false;                     // BOOLEAN TO SHOW LOADER WHEN ASYNC FUNCTION IS CALLED
+  loading: boolean = false;                     // BOOLEAN TO SHOW LOADER WHEN ASYNC FUNCTION IS CALLED
 
   container_to_show_stats: any = null;       // CONTAINER VARIABLE THAT IS PASSED TO 'STATS' COMPONENT
   container_to_show_logs: any = null;        // CONTAINER VARIABLE THAT IS PASSED TO 'LOGS' COMPONENT
@@ -34,33 +34,25 @@ export class HomePage {
   getAvailableContainers() {
     console.log("getAvailableContainers");
     // ACTIVATE LOAD ICON
-    this.load = true;
+    this.loading = true;
 
     this.api.getListOfContainers().subscribe(res => {
         // DEBUG MESSAGE
         // console.log('Res getListOfContainers: ' + JSON.stringify(res));
 
-        // EMPTY CONTAINERS LIST
-        this.containers = [];
-
-        // MAP RESULT
-        res.map(cont => {
-            this.containers.push(cont);
-        });
-
+        // REFRESH CONTAINERS LIST
+        this.containers = res;
 
         // STOP LOAD ICON
-        setTimeout(() => {
-          this.load = false;
-        }, this.TIME_TO_REFRESH);
+        // setTimeout(() => {
+          this.loading = false;
+        // }, this.TIME_TO_REFRESH);
 
     },
       err => {
 
         // STOP LOAD ICON
-        setTimeout(() => {
-          this.load = false;
-        }, this.TIME_TO_REFRESH);
+          this.loading = false;
 
         // DEBUG MESSAGE
         console.error("Error while getListOfContainers: " + JSON.stringify(err));
@@ -71,25 +63,28 @@ export class HomePage {
     });
   }
 
+  // kapoou() {
+  //   new Poll(() => this.refreshContainers())
+  // }
+
   refreshContainers() {
     console.log('refreshContainers');
+    this.loading = true;
+
     this.api.getListOfContainers().subscribe(res => {
         // DEBUG MESSAGE
         // console.log('Res getListOfContainers: ' + JSON.stringify(res));
 
-        // EMPTY CONTAINERS LIST
-        this.containers = [];
-
-        // MAP RESULT
-        res.map(cont => {
-            this.containers.push(cont);
-        });
-
-
-        // STOP LOAD ICON
+        // REFRESH CONTAINERS LIST
+        this.containers = res;
+        this.loading = false;
         // setTimeout(() => {
-        //   this.refreshContainers();
-        // }, this.TIME_TO_REFRESH);
+        //   this.load = false;
+        // }, this.TIME_TO_REFRESH - 2000);
+
+        setTimeout(() => {
+          this.refreshContainers();
+        }, this.TIME_TO_REFRESH);
     });
   }
 
@@ -165,7 +160,7 @@ export class HomePage {
 ///////////////////////////////////////////////////////////////////////////
   stateOfContainerChanged(stateObj) {
     console.log('stateOfContainerChanged');
-    console.log('Fun: '+ stateObj.fun);
+
     // IF STOP DISABLE STATS,LOGS IF WERE ENABLED FOR THAT CONTAINER
     if (stateObj.fun == 'stop') {
       this.container_to_show_stats = this.assignDeactivateStatsLogs(stateObj.container, this.container_to_show_stats);
@@ -233,6 +228,10 @@ export class HomePage {
         this.container_to_show_logs = container;
       }, 10);
     }
+  }
+
+  trackByFn(index, item) {
+    return item.Id; // or item.id
   }
 
 ////////////////////////////// PAGE HELPERS ////////////////////////////////////////

@@ -7,44 +7,55 @@ import { ApiProvider } from "../../providers/api/api";
   templateUrl: 'logs.html'
 })
 export class LogsComponent {
+  TIME_TO_REFRESH: number = 4000;      // CONSTANT THAT INDICADES HOW OFTEN WE REFRESH CONTAINERS STATE
   @Input() container: any;                        // INPUT OF COMPONENT
   logs: Array<string> = [];                       // LOGS ARRAY
   date: Date = new Date();                        // CURRENT DATE
+  loading: boolean = false;                     // BOOLEAN TO SHOW LOADER WHEN ASYNC FUNCTION IS CALLED
+
 
   constructor(public api: ApiProvider) {
     // GET LOGS
-    this.getLogs();
+    setTimeout(() => {
+      this.getLogs();
+    }, 0);
 
     // PUSH INIT LOG TO ARRAY OF LOGS
     let dateToPrint = this.getMediumDate();
     let logToAdd = dateToPrint+' ...';
     this.logs.push(logToAdd);
 
-    // GET LOGS, EVERY 5 SECOND
-    setInterval(() => {
-        this.getLogs();
-    }, 5000);
   }
 
 ///////////////////////////////////////////////////////////////////////////
 // GET LOGS FROM SERVER
 ///////////////////////////////////////////////////////////////////////////
   getLogs() {
+    // CHECK IF CONTAINER IS PASSED
     if (this.container) {
+        this.loading = true;
         // CALL TO SERVER
         this.api.getLogsOfContainer(this.container.Id).subscribe(res => {
           // DEBUG MESSAGE
           // console.log('Res getLogsOfContainer: ' + JSON.stringify(res));
 
+          this.loading = false;
+
           // UPDATE DATE
           this.date = new Date();
+
           // IF LOG IS NON-EMPTY CONCAT OUTPUT
           if (res) {
               this.addToLogs(res.split('\n'));
           }
+
+          setTimeout(() => {
+            this.getLogs();
+          }, this.TIME_TO_REFRESH);
         },
           err => {
             // DEBUG MESSAGE
+            this.loading = false;
             console.error("Error while getLogsOfContainer: " + JSON.stringify(err));
         });
     }
