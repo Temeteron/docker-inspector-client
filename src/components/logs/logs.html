@@ -1,40 +1,41 @@
 <div>
-
   <ion-card>
-    <ion-row class="posRelative paddingRow">
-        
-        <ion-col title="Statistics" class="alignTextCenter">
-          <div class="title-font">
-              <b>Logs of Container</b>
+    <ion-grid class="paddingGrid">
+      <ion-row class="posRelative paddingRow">
+          
+          <ion-col title="Statistics" class="alignTextCenter">
+            <div class="title-font">
+                <b>Logs of Container</b>
+            </div>
+          </ion-col>
+
+          <ion-col title="Name of container" class="alignTextCenter">
+            <div class="colorBlue title-font undeline">
+                <b>{{ container?.Names[0] }}</b>
+            </div>
+          </ion-col>
+
+          <ion-col title="Time" class="alignTextCenter">
+            <div class="title-font">
+              <b>{{ date | date: 'mediumTime'}}</b>
+            </div>
+          </ion-col>
+
+          <div class="posAbsoluteRight">
+            <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
           </div>
-        </ion-col>
 
-        <ion-col title="Name of container" class="alignTextCenter">
-          <div class="colorBlue title-font undeline">
-              <b>{{ container?.Names[0] }}</b>
-          </div>
-        </ion-col>
+        </ion-row>
 
-        <ion-col title="Time" class="alignTextCenter">
-          <div class="title-font">
-            <b>{{ date | date: 'mediumTime'}}</b>
-          </div>
-        </ion-col>
-
-        <div class="posAbsoluteRight">
-          <ion-spinner name="ios" *ngIf="loading"></ion-spinner>
-        </div>
-
-      </ion-row>
-
-      <ion-row>
-        <ion-col class="padding-of-logs">
-          <div class="background-logs max-logs-height">
-              <div *ngFor="let log of logs;">
-                  {{ log }}
-              </div>
-          </div>
-        </ion-col>
-      </ion-row>
+        <ion-row>
+          <ion-col class="padding-of-logs">
+            <div class="background-logs max-logs-height">
+                <div *ngFor="let log of logs;">
+                    {{ log }}
+                </div>
+            </div>
+          </ion-col>
+        </ion-row>
+    </ion-grid>
   </ion-card>
 </div>
