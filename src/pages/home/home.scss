@@ -3,10 +3,6 @@ page-home {
 		background-color: #f4f4f4;
 	}
 
-	.center {
-		text-align: center;
-	}
-
 	.vertical-center {
 		display: flex;
 		flex-direction: column;
@@ -17,5 +13,93 @@ page-home {
 		position: absolute;
 		right: 50px;
 		bottom: 50px;
+	}
+
+	.cursorCs {
+		cursor: pointer;
+	}
+
+	.inline {
+		display: inline;
+	}
+
+	.alignTextCenter {
+		text-align: center;
+	}
+
+	.alignTextRight {
+		text-align: right;
+	}
+
+	.alignTextLeft {
+		text-align: left;
+	}
+
+	.colorBlue {
+		color: blue;
+	}
+
+	.small-spinner {
+		width: 17px !important;
+		height: 17px !important;
+	}
+
+	.spinnerBox {
+		width: 20px;
+		height: 20px;
+	}
+
+	.posRelative {
+		position: relative;
+	}
+
+	.posAbsoluteRight {
+		position: absolute;
+		right: 10px;
+	}
+
+	.paddingRow {
+		padding: 5px 0 5px 0;
+	}
+
+	.paddingGrid {
+		padding: 10px 5px 10px 5px;
+	}
+
+	.padding-top8 {
+		padding-top: 8px;
+	}
+
+	.height85 {
+		height: 85px;
+	}
+
+	.title-font {
+		font-size: 18px;
+	}
+
+	.subtitle-font {
+		font-size: 16px;
+	}
+
+	.undeline {
+		text-decoration: underline;
+	}
+
+	ion-col {
+		text-align: center;
+	}
+
+	.padding-action-btns {
+		padding: 0 5px 0 5px;
+	}
+
+	.no-padding {
+		padding: 0 0 0 0;
+	}
+
+	hr {
+/*		border: 10px solid green;
+		border-radius: 5px;*/
 	}
 }

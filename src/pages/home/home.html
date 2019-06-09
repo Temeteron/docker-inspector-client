@@ -1,29 +1,67 @@
 <ion-header>
   <ion-navbar color="dark">
     <ion-title class="navTitle">Home</ion-title>
-    <ion-spinner name="ios" color="success" *ngIf="load"></ion-spinner>
+    <ion-spinner name="ios" color="success" *ngIf="loading"></ion-spinner>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding class="background-template">
   <div class="template-center">
 
-    <ion-list *ngFor="let cont of containers;">
-      <container [container]="cont" (stats)="onStats($event)" (logs)="onLogs($event)" (changedState)="stateOfContainerChanged($event)"></container>
-    </ion-list>
+    <ion-card>
+      <ion-grid>
 
-    <div *ngIf="container_to_show_stats">
+        <ion-row class="padding-top8">
+          <ion-col class="title-font">
+            <b>
+              Container
+            </b>
+          </ion-col>
+
+          <ion-col class="title-font">
+            <b>
+              Image
+            </b>
+          </ion-col>
+
+          <ion-col class="title-font">
+            <b>
+              Status
+            </b>
+          </ion-col>
+
+          <ion-col class="title-font">
+            <b>
+              Actions
+            </b>
+          </ion-col>
+        </ion-row>
+
+          <ion-row class="no-padding">
+            <ion-col>
+              <hr>
+            </ion-col>
+          </ion-row>
+
+        <span *ngFor="let cont of containers; trackBy: trackByFn">
+          <container [container]="cont" (stats)="onStats($event)" (logs)="onLogs($event)" (changedState)="stateOfContainerChanged($event)"></container>
+        </span>
+      </ion-grid>
+
+    </ion-card>
+
+    <div *ngIf="container_to_show_stats" class="padding-top8">
       <stats [container]="container_to_show_stats"></stats>
     </div>
 
-    <div *ngIf="container_to_show_logs">
+    <div *ngIf="container_to_show_logs" class="padding-top8">
       <logs [container]="container_to_show_logs"></logs>
     </div>
 
   </div>
 
   <ion-fab class="fab-class">
-    <button ion-fab color="secondary" title="Create Container" (click)="createContainerModal()">
+    <button ion-fab color="secondary" title="Create Container - Pull Image" (click)="createContainerModal()">
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>

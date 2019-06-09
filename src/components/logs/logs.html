@@ -1,18 +1,40 @@
 <div>
 
-  <br>
-  <ion-title class="center">
-    Logs of Container: {{ container?.Names[0] }}
-  </ion-title>
+  <ion-card>
+    <ion-row class="posRelative paddingRow">
+        
+        <ion-col title="Statistics" class="alignTextCenter">
+          <div class="title-font">
+              <b>Logs of Container</b>
+          </div>
+        </ion-col>
 
-  <ion-item>
-    <div class="center">
-        <b>{{ date | date: 'mediumTime'}}</b>
-    </div>
-    <div class="background-logs">
-        <div *ngFor="let log of logs;">
-            {{ log }}
+        <ion-col title="Name of container" class="alignTextCenter">
+          <div class="colorBlue title-font undeline">
+              <b>{{ container?.Names[0] }}</b>
+          </div>
+        </ion-col>
+
+        <ion-col title="Time" class="alignTextCenter">
+          <div class="title-font">
+            <b>{{ date | date: 'mediumTime'}}</b>
+          </div>
+        </ion-col>
+
+        <div class="posAbsoluteRight">
+          <ion-spinner name="ios" *ngIf="loading"></ion-spinner>
         </div>
-    </div>
-  </ion-item>
+
+      </ion-row>
+
+      <ion-row>
+        <ion-col class="padding-of-logs">
+          <div class="background-logs max-logs-height">
+              <div *ngFor="let log of logs;">
+                  {{ log }}
+              </div>
+          </div>
+        </ion-col>
+      </ion-row>
+  </ion-card>
 </div>

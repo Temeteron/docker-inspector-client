@@ -1,20 +1,36 @@
 <div>
+  <ion-card>
+    <ion-grid class="paddingGrid">
 
-  <br>
-  <ion-title class="center">
-    Stats of Container: {{ container?.Names[0] }}
-  </ion-title>
-
-
-  <ion-item>
-    <div class="center">
-        <b>{{ stats?.read | date: 'mediumTime'}}</b>
-    </div>
-    <ion-grid>
-
-      <ion-row>
+      <ion-row class="posRelative paddingRow">
         
-        <ion-col title="CPU" class="center">
+        <ion-col title="Statistics" class="alignTextCenter">
+          <div class="title-font">
+            <b>Stats of Container</b>
+          </div>
+        </ion-col>
+
+        <ion-col title="Name of container" class="alignTextCenter">
+          <div class="colorBlue title-font undeline">
+              <b>{{ container?.Names[0] }}</b>
+          </div>
+        </ion-col>
+
+        <ion-col title="Time" class="alignTextCenter">
+          <div class="title-font">
+            <b>{{ stats?.read | date: 'mediumTime'}}</b>
+          </div>
+        </ion-col>
+
+        <div class="posAbsoluteRight">
+          <ion-spinner name="ios" *ngIf="loading"></ion-spinner>
+        </div>
+
+      </ion-row>
+
+      <ion-row class="paddingRow height85">
+        
+        <ion-col title="CPU" class="alignTextCenter">
           <div>
             CPU Usage
           </div>
@@ -26,7 +42,7 @@
           </div>
         </ion-col>
 
-        <ion-col title="Online CPU" class="center">
+        <ion-col title="Online CPU" class="alignTextCenter">
             <div>
               Online cpus
             </div>
@@ -38,7 +54,7 @@
             </div>
         </ion-col>
 
-        <ion-col title="Memory" class="center">
+        <ion-col title="Memory" class="alignTextCenter">
           <div>
             Memory
           </div>
@@ -51,8 +67,9 @@
           </div>
         </ion-col>
 
-
       </ion-row>
+
     </ion-grid>
-  </ion-item>
+
+  </ion-card>
 </div>
