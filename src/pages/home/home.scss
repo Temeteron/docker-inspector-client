@@ -98,8 +98,9 @@ page-home {
 		padding: 0 0 0 0;
 	}
 
-	hr {
-/*		border: 10px solid green;
-		border-radius: 5px;*/
+	ion-spinner * {
+		stroke: blue !important;
+		/*fill: blue !important;*/
 	}
+
 }
