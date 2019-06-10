@@ -85,11 +85,8 @@ export class ModalPage {
         // DISMISS LOADER
         this.dismissLoader();
 
-        // MESSAGE TO SHOW
-        objMsg.message = 'Container created';
-
         // DISMISS MODAL
-        this.dismiss(objMsg);
+        this.dismiss(null);
     },
       err => {
         // DEBUG MESSAGE
