@@ -8,7 +8,7 @@ import { ApiProvider } from "../../providers/api/api";
 })
 export class StatsComponent {
   @Input() container: any = null;                                            // INPUT OF COMPONENT
-  @Output() containerStopped = new EventEmitter<Object>();                    // VAR TO COMMUNICATE WITH PAREMT ABOUT UNEXPECTED ERROR
+  @Output() containerStopped = new EventEmitter<Object>();                   // VAR TO COMMUNICATE WITH PAREMT ABOUT UNEXPECTED ERROR
   stats: any = null;                                                         // STATS OBJECT
   loading: boolean = false;                                                  // BOOLEAN TO SHOW LOADER WHEN ASYNC FUNCTION IS CALLED
 
