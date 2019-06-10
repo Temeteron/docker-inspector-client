@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ApiProvider } from "../../providers/api/api";
 
 
@@ -7,10 +7,10 @@ import { ApiProvider } from "../../providers/api/api";
   templateUrl: 'stats.html'
 })
 export class StatsComponent {
-  TIME_TO_REFRESH: number = 4000;      // CONSTANT THAT INDICADES HOW OFTEN WE REFRESH CONTAINERS STATE
-  @Input() container: any = null;        // INPUT OF COMPONENT
-  stats: any = null;                     // STATS OBJECT
-  loading: boolean = false;                     // BOOLEAN TO SHOW LOADER WHEN ASYNC FUNCTION IS CALLED
+  @Input() container: any = null;                                            // INPUT OF COMPONENT
+  @Output() containerStopped = new EventEmitter<Object>();                    // VAR TO COMMUNICATE WITH PAREMT ABOUT UNEXPECTED ERROR
+  stats: any = null;                                                         // STATS OBJECT
+  loading: boolean = false;                                                  // BOOLEAN TO SHOW LOADER WHEN ASYNC FUNCTION IS CALLED
 
   constructor(public api: ApiProvider) {
     setTimeout(() => {
@@ -29,19 +29,36 @@ export class StatsComponent {
       this.api.getStatsOfContainer(this.container.Id).subscribe(res => {
           // DEBUG MESSAGE
           // console.log('Res getStatsOfContainer: ' + JSON.stringify(res));
-
-          this.stats = res;
           this.loading = false;
-          setTimeout(() => {
-            this.getStats();
-          }, this.TIME_TO_REFRESH);
+          
+          // DEACTIVATE COMPONENT - CONTAINER HAS STOPPED
+          if (!res.pids_stats.current) {
+            console.warn('CONTAINER STOPPED - DISABLING STATS');
+            this.disableStatsComponent();
+          } else {
+            this.stats = res;
+            setTimeout(() => {
+              this.getStats();
+            }, this.api.TIME_TO_REFRESH);
+          }
       },
         err => {
           // DEBUG MESSAGE
           this.loading = false;
           console.error("Error while getStatsOfContainer: " + JSON.stringify(err));
+
+          // DEACTIVATE COMPONENT - CONTAINER HAS STOPPED
+          this.disableStatsComponent();
       });
     }
   }
+
+///////////////////////////////////////////////////////////////////////////
+// EMIT EVENT TO PARENT TO DISABLE COMPONENT
+///////////////////////////////////////////////////////////////////////////
+  disableStatsComponent() {
+    this.containerStopped.emit(true);
+  }
+
 
 }

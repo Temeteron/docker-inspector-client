@@ -8,7 +8,11 @@
 <ion-content padding class="background-template">
   <div class="template-center">
 
-    <ion-card>
+    <div *ngIf="!containers.length" class="alignTextCenter title-font">
+      {{ no_containers_messsage }}
+    </div>
+
+    <ion-card *ngIf="containers.length">
       <ion-grid>
 
         <ion-row class="padding-top8">
@@ -47,11 +51,10 @@
           <container [container]="cont" (stats)="onStats($event)" (logs)="onLogs($event)" (changedState)="stateOfContainerChanged($event)"></container>
         </span>
       </ion-grid>
-
     </ion-card>
 
     <div *ngIf="container_to_show_stats" class="padding-top8">
-      <stats [container]="container_to_show_stats"></stats>
+      <stats [container]="container_to_show_stats" (containerStopped)="disableStatsComponent($event)"></stats>
     </div>
 
     <div *ngIf="container_to_show_logs" class="padding-top8">
