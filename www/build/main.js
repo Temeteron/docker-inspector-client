@@ -57,7 +57,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 // IMPORT API AND MODAL PAGE
 
 
-// import { Poll } from '../../utils/poll';
 var HomePage = /** @class */ (function () {
     function HomePage(api, modalCtrl, alertCtrl) {
         this.api = api;
@@ -74,15 +73,13 @@ var HomePage = /** @class */ (function () {
         this.refreshContainers();
         this.getAvailableImages();
     }
-    // kapoou() {
-    //   new Poll(() => this.refreshContainers(), this.api.TIME_TO_REFRESH);
-    // }
     ///////////////////////////////////////////////////////////////////////////
     // GET ALL CONTAINERS 
     ///////////////////////////////////////////////////////////////////////////
     HomePage.prototype.getAvailableContainers = function () {
+        // DEBUG MESSAGE
+        // console.log("getAvailableContainers");
         var _this = this;
-        console.log("getAvailableContainers");
         // ACTIVATE LOAD ICON
         this.loading = true;
         this.api.getListOfContainers().subscribe(function (res) {
@@ -90,10 +87,7 @@ var HomePage = /** @class */ (function () {
             // console.log('Res getListOfContainers: ' + JSON.stringify(res));
             // REFRESH CONTAINERS LIST
             _this.containers = res;
-            // STOP LOAD ICON
-            // setTimeout(() => {
             _this.loading = false;
-            // }, this.TIME_TO_REFRESH);
         }, function (err) {
             // STOP LOAD ICON
             _this.loading = false;
@@ -105,23 +99,19 @@ var HomePage = /** @class */ (function () {
         });
     };
     HomePage.prototype.refreshContainers = function () {
+        // DEBUG MESSAGE
+        // console.log('refreshContainers');
         var _this = this;
-        return new Promise(function () {
-            console.log('refreshContainers');
-            _this.loading = true;
-            _this.api.getListOfContainers().subscribe(function (res) {
-                // DEBUG MESSAGE
-                // console.log('Res getListOfContainers: ' + JSON.stringify(res));
-                // REFRESH CONTAINERS LIST
-                _this.containers = res;
-                _this.loading = false;
-                // setTimeout(() => {
-                //   this.load = false;
-                // }, this.TIME_TO_REFRESH - 2000);
-                setTimeout(function () {
-                    _this.refreshContainers();
-                }, _this.api.TIME_TO_REFRESH);
-            });
+        this.loading = true;
+        this.api.getListOfContainers().subscribe(function (res) {
+            // DEBUG MESSAGE
+            // console.log('Res getListOfContainers: ' + JSON.stringify(res));
+            // REFRESH CONTAINERS LIST
+            _this.containers = res;
+            _this.loading = false;
+            setTimeout(function () {
+                _this.refreshContainers();
+            }, _this.api.TIME_TO_REFRESH);
         });
     };
     ///////////////////////////////////////////////////////////////////////////
@@ -182,7 +172,7 @@ var HomePage = /** @class */ (function () {
     // CONTAINER'S STATE CHANGED (START, STOP, DELETE)
     ///////////////////////////////////////////////////////////////////////////
     HomePage.prototype.stateOfContainerChanged = function (stateObj) {
-        console.log('stateOfContainerChanged');
+        // console.log('stateOfContainerChanged');
         // IF STOP DISABLE STATS,LOGS IF WERE ENABLED FOR THAT CONTAINER
         if (stateObj.fun == 'stop') {
             this.container_to_show_stats = this.assignDeactivateStatsLogs(stateObj.container, this.container_to_show_stats);
@@ -201,20 +191,20 @@ var HomePage = /** @class */ (function () {
     // EVENT EMMITER TO CATCH TRIGGER OF STATS FROM EACH COMPONENT
     ///////////////////////////////////////////////////////////////////////////
     HomePage.prototype.onStats = function (container) {
-        var _this = this;
         // DEBUG MESSAGE
-        console.info('onStats');
+        // console.info('onStats');
+        var _this = this;
         // CHECK IF COMPONENT 'STATS' CONTAINS THE SAME COMNTAINER
         // IF YES, DISABLE 'STATS' COMPONET
         if (this.container_to_show_stats && (container.Id == this.container_to_show_stats.Id)) {
             // DEBUG MESSAGE
-            console.log("Already Showing stats for this container. Will disable");
+            // console.log("Already Showing stats for this container. Will disable");
             // EMPTY 'STATS' COMPONENT
             this.container_to_show_stats = null;
         }
         else {
             // DEBUG MESSAGE
-            console.log("Activate stats on container: " + container.Names[0]);
+            // console.log("Activate stats on container: " + container.Names[0]);
             // EMPTY AND ASSIGN AFTER 10MS TO RE-INITIALIZE
             this.container_to_show_stats = null;
             setTimeout(function () {
@@ -226,20 +216,20 @@ var HomePage = /** @class */ (function () {
     // EVENT EMMITER TO CATCH TRIGGER OF LOGS FROM EACH COMPONENT
     ///////////////////////////////////////////////////////////////////////////
     HomePage.prototype.onLogs = function (container) {
-        var _this = this;
         // DEBUG MESSAGE
-        console.info('onLogs');
+        // console.info('onLogs');
+        var _this = this;
         // CHECK IF COMPONENT 'LOGS' CONTAINS THE SAME COMNTAINER
         // IF YES, DISABLE 'LOGS' COMPONET
         if (this.container_to_show_logs && (container.Id == this.container_to_show_logs.Id)) {
             // DEBUG MESSAGE
-            console.log("Already Showing logs for this container. Will disable");
+            // console.log("Already Showing logs for this container. Will disable");
             // EMPTY 'LOGS' COMPONENT
             this.container_to_show_logs = null;
         }
         else {
             // DEBUG MESSAGE
-            console.log("Activate logs on container: " + container.Names[0]);
+            // console.log("Activate logs on container: " + container.Names[0]);
             // EMPTY AND ASSIGN AFTER 10MS TO RE-INITIALIZE
             this.container_to_show_logs = null;
             setTimeout(function () {
@@ -764,7 +754,8 @@ var ContainerComponent = /** @class */ (function () {
         this.presentLoading();
         // CALL TO SERVER
         this.api.startContainer(this.container.Id).subscribe(function (res) {
-            console.log('Res startContainer: ' + JSON.stringify(res));
+            // DEBUG MESSAGE
+            // console.log('Res startContainer: ' + JSON.stringify(res));
             // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
             _this.stateChanged('start');
             //DISMISS LOADER
@@ -786,7 +777,7 @@ var ContainerComponent = /** @class */ (function () {
         // CALL TO SERVER
         this.api.stopContainer(this.container.Id).subscribe(function (res) {
             // DEBUG MESSAGE
-            console.log('Res stopContainer: ' + JSON.stringify(res));
+            // console.log('Res stopContainer: ' + JSON.stringify(res));
             // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
             _this.stateChanged('stop');
             //DISMISS LOADER
@@ -809,7 +800,7 @@ var ContainerComponent = /** @class */ (function () {
         // CALL TO SERVER
         this.api.deleteContainer(this.container.Id).subscribe(function (res) {
             // DEBUG MESSAGE
-            console.log('Res deleteContainer: ' + JSON.stringify(res));
+            // console.log('Res deleteContainer: ' + JSON.stringify(res));
             // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
             _this.stateChanged('delete');
             //DISMISS LOADER
@@ -830,7 +821,7 @@ var ContainerComponent = /** @class */ (function () {
     ///////////////////////////////////////////////////////////////////////////
     ContainerComponent.prototype.stateChanged = function (fun) {
         // DEBUG MESSAGE
-        console.log("stateChanged");
+        // console.log("stateChanged");
         var stateObj = {
             "container": this.container,
             "fun": fun
@@ -941,7 +932,8 @@ var StatsComponent = /** @class */ (function () {
                 _this.loading = false;
                 // DEACTIVATE COMPONENT - CONTAINER HAS STOPPED
                 if (!res.pids_stats.current) {
-                    console.warn('CONTAINER STOPPED - DISABLING STATS');
+                    // DEBUG MESSAGE
+                    // console.warn('CONTAINER STOPPED - DISABLING STATS');
                     _this.disableStatsComponent();
                 }
                 else {
