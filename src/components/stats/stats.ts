@@ -33,7 +33,8 @@ export class StatsComponent {
           
           // DEACTIVATE COMPONENT - CONTAINER HAS STOPPED
           if (!res.pids_stats.current) {
-            console.warn('CONTAINER STOPPED - DISABLING STATS');
+            // DEBUG MESSAGE
+            // console.warn('CONTAINER STOPPED - DISABLING STATS');
             this.disableStatsComponent();
           } else {
             this.stats = res;

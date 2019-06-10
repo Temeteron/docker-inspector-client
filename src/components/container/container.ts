@@ -50,7 +50,8 @@ export class ContainerComponent {
 
     // CALL TO SERVER
     this.api.startContainer(this.container.Id).subscribe(res => {
-        console.log('Res startContainer: ' + JSON.stringify(res));
+        // DEBUG MESSAGE
+        // console.log('Res startContainer: ' + JSON.stringify(res));
 
         // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
         this.stateChanged('start');
@@ -75,7 +76,7 @@ export class ContainerComponent {
     // CALL TO SERVER
     this.api.stopContainer(this.container.Id).subscribe(res => {
         // DEBUG MESSAGE
-        console.log('Res stopContainer: ' + JSON.stringify(res));
+        // console.log('Res stopContainer: ' + JSON.stringify(res));
 
         // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
         this.stateChanged('stop');
@@ -102,7 +103,7 @@ export class ContainerComponent {
     // CALL TO SERVER
     this.api.deleteContainer(this.container.Id).subscribe(res => {
       // DEBUG MESSAGE
-        console.log('Res deleteContainer: ' + JSON.stringify(res));
+        // console.log('Res deleteContainer: ' + JSON.stringify(res));
 
         // EMIT EVENT TO PARENT TO CHANGE STATE OF CONTAINER
         this.stateChanged('delete');
@@ -122,14 +123,13 @@ export class ContainerComponent {
     });
   }
 
-
 ///////////////////////////////////////////////////////////////////////////
 // EMIT EVENT TO PARENT THAT
 // STATE WAS CHANGED (RUNNING, EXITED, CREATED)
 ///////////////////////////////////////////////////////////////////////////
   stateChanged(fun) {
     // DEBUG MESSAGE
-    console.log("stateChanged");
+    // console.log("stateChanged");
 
     let stateObj = {
       "container": this.container,
