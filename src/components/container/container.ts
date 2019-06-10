@@ -12,7 +12,7 @@ export class ContainerComponent {
   @Output() logs = new EventEmitter<Object>();                     // VAR TO COMMUNICATE WITH PAREMT ABOUT LOGS
   @Output() changedState = new EventEmitter<Object>();         // VAR TO COMMUNICATE WITH PARENT BECAUSE STATE CHANGED
 
-  colorStats: string = 'dark';
+  colorStats: string = 'colorBlue';
   activeStats: boolean = false;
   activeLogs: boolean = false;
   loader: any = null;                                           // LOADER VAR FOR ASYNC REQUESTS
@@ -25,8 +25,10 @@ export class ContainerComponent {
 ///////////////////////////////////////////////////////////////////////////
   checkRunning(state) {
     if (state == 'running') {
+      this.colorStats = 'colorGreen';
       return true;
     } else {
+      this.colorStats = 'colorBlue';
       return false;
     }
   }
