@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AlertController, ModalController } from 'ionic-angular';
 
 // IMPORT API AND MODAL PAGE
-import { ApiProvider } from "../../providers/api/api";
+import { ApiProvider } from '../../providers/api/api';
 import { ModalPage } from '../modal/modal';
 
 
@@ -11,8 +11,6 @@ import { ModalPage } from '../modal/modal';
   templateUrl: 'home.html'
 })
 export class HomePage {
-  TIME_TO_REFRESH: number = 4000;      // CONSTANT THAT INDICADES HOW OFTEN WE REFRESH CONTAINERS STATE
-
   containers: Array<any> = [];               // CONTAINS ALL AVAILABLE CONTAINERS
   images: Array<any> = [];                   // CONTAINS ALL AVAILABLE IMAGES
   loading: boolean = false;                     // BOOLEAN TO SHOW LOADER WHEN ASYNC FUNCTION IS CALLED
@@ -20,19 +18,22 @@ export class HomePage {
   container_to_show_stats: any = null;       // CONTAINER VARIABLE THAT IS PASSED TO 'STATS' COMPONENT
   container_to_show_logs: any = null;        // CONTAINER VARIABLE THAT IS PASSED TO 'LOGS' COMPONENT
 
+  // MESSAGE TO SHOW IF THERE ARE NO CONTAINERS AVAILABLE
+  no_containers_messsage: string = "Currently there are no containers. Create one from the bottom right button.";
+
   constructor( public api: ApiProvider, public modalCtrl: ModalController, private alertCtrl: AlertController) {
     // GET CONTAINERS AND IMAGES
     this.refreshContainers();
     this.getAvailableImages();
   }
 
-//////////// TO DO -GET CONTAINERS EVERY 2 SECONDS WITHOUT LOSING EVENTS//////
-
 ///////////////////////////////////////////////////////////////////////////
 // GET ALL CONTAINERS 
 ///////////////////////////////////////////////////////////////////////////
   getAvailableContainers() {
-    console.log("getAvailableContainers");
+    // DEBUG MESSAGE
+    // console.log("getAvailableContainers");
+
     // ACTIVATE LOAD ICON
     this.loading = true;
 
@@ -42,12 +43,7 @@ export class HomePage {
 
         // REFRESH CONTAINERS LIST
         this.containers = res;
-
-        // STOP LOAD ICON
-        // setTimeout(() => {
-          this.loading = false;
-        // }, this.TIME_TO_REFRESH);
-
+        this.loading = false;
     },
       err => {
 
@@ -63,12 +59,11 @@ export class HomePage {
     });
   }
 
-  // kapoou() {
-  //   new Poll(() => this.refreshContainers())
-  // }
 
   refreshContainers() {
-    console.log('refreshContainers');
+    // DEBUG MESSAGE
+    // console.log('refreshContainers');
+
     this.loading = true;
 
     this.api.getListOfContainers().subscribe(res => {
@@ -78,13 +73,10 @@ export class HomePage {
         // REFRESH CONTAINERS LIST
         this.containers = res;
         this.loading = false;
-        // setTimeout(() => {
-        //   this.load = false;
-        // }, this.TIME_TO_REFRESH - 2000);
 
         setTimeout(() => {
           this.refreshContainers();
-        }, this.TIME_TO_REFRESH);
+        }, this.api.TIME_TO_REFRESH);
     });
   }
 
@@ -159,7 +151,7 @@ export class HomePage {
 // CONTAINER'S STATE CHANGED (START, STOP, DELETE)
 ///////////////////////////////////////////////////////////////////////////
   stateOfContainerChanged(stateObj) {
-    console.log('stateOfContainerChanged');
+    // console.log('stateOfContainerChanged');
 
     // IF STOP DISABLE STATS,LOGS IF WERE ENABLED FOR THAT CONTAINER
     if (stateObj.fun == 'stop') {
@@ -170,8 +162,10 @@ export class HomePage {
     this.getAvailableContainers();
   }
 
-  // HELP FUNCTION TO DEACTIVATE STATS-LOGS
-  // COMPONENT IF SELECTED CONTAINER STOPPED
+///////////////////////////////////////////////////////////////////////////
+// HELP FUNCTION TO DEACTIVATE STATS-LOGS
+// COMPONENT IF SELECTED CONTAINER STOPPED
+///////////////////////////////////////////////////////////////////////////
   assignDeactivateStatsLogs(container, component) {
     return (component ? ((container.Id == component.Id) ? null : component) : null);
   }
@@ -181,19 +175,19 @@ export class HomePage {
 ///////////////////////////////////////////////////////////////////////////
   onStats(container) {
     // DEBUG MESSAGE
-    console.info('onStats');
+    // console.info('onStats');
 
     // CHECK IF COMPONENT 'STATS' CONTAINS THE SAME COMNTAINER
     // IF YES, DISABLE 'STATS' COMPONET
     if (this.container_to_show_stats && (container.Id == this.container_to_show_stats.Id)) {
       // DEBUG MESSAGE
-      console.log("Already Showing stats for this container. Will disable");
+      // console.log("Already Showing stats for this container. Will disable");
       
       // EMPTY 'STATS' COMPONENT
       this.container_to_show_stats = null;
     } else {
       // DEBUG MESSAGE
-      console.log("Activate stats on container: " + container.Names[0]);
+      // console.log("Activate stats on container: " + container.Names[0]);
       
       // EMPTY AND ASSIGN AFTER 10MS TO RE-INITIALIZE
       this.container_to_show_stats = null;
@@ -208,19 +202,19 @@ export class HomePage {
 ///////////////////////////////////////////////////////////////////////////
   onLogs(container) {
     // DEBUG MESSAGE
-    console.info('onLogs');
+    // console.info('onLogs');
 
     // CHECK IF COMPONENT 'LOGS' CONTAINS THE SAME COMNTAINER
     // IF YES, DISABLE 'LOGS' COMPONET
     if (this.container_to_show_logs && (container.Id == this.container_to_show_logs.Id)) {
       // DEBUG MESSAGE
-      console.log("Already Showing logs for this container. Will disable");
+      // console.log("Already Showing logs for this container. Will disable");
 
       // EMPTY 'LOGS' COMPONENT
       this.container_to_show_logs = null;
     } else {
       // DEBUG MESSAGE
-      console.log("Activate logs on container: " + container.Names[0]);
+      // console.log("Activate logs on container: " + container.Names[0]);
 
       // EMPTY AND ASSIGN AFTER 10MS TO RE-INITIALIZE
       this.container_to_show_logs = null;
@@ -230,11 +224,22 @@ export class HomePage {
     }
   }
 
-  trackByFn(index, item) {
-    return item.Id; // or item.id
+///////////////////////////////////////////////////////////////////////////
+// EVENT EMMITER TO DACTIVATE STATS BECAUSE
+// CONTAINER IS NO LONGER RUNNING
+///////////////////////////////////////////////////////////////////////////
+  disableStatsComponent() {
+    this.container_to_show_stats = null;
   }
 
-////////////////////////////// PAGE HELPERS ////////////////////////////////////////
+////////////////////////// PAGE HELPERS ///////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////
+// IMPROVE FOR LOOPS REMDERIMG PERFORMANCE
+///////////////////////////////////////////////////////////////////////////
+  trackByFn(index, item) {
+    return item.Id;
+  }
 
 ///////////////////////////////////////////////////////////////////////////
 // ALERT MESSAGE FOR ERRORS
