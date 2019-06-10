@@ -60,5 +60,4 @@ export class StatsComponent {
     this.containerStopped.emit(true);
   }
 
-
 }
