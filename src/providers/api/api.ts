@@ -5,7 +5,8 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ApiProvider {
-  baseApiUrl = 'http://localhost:3000';
+  TIME_TO_REFRESH: number = 2000;              // CONSTANT THAT INDICADES HOW OFTEN WE REFRESH COMPONENTS
+  baseApiUrl = 'http://localhost:3000';        // SERVER ADDRESS TO MAKE REQUESTS
 
   constructor(public http: HttpClient) {}
 

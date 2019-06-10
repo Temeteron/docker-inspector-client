@@ -7,11 +7,10 @@ import { ApiProvider } from "../../providers/api/api";
   templateUrl: 'logs.html'
 })
 export class LogsComponent {
-  TIME_TO_REFRESH: number = 4000;      // CONSTANT THAT INDICADES HOW OFTEN WE REFRESH CONTAINERS STATE
-  @Input() container: any;                        // INPUT OF COMPONENT
-  logs: Array<string> = [];                       // LOGS ARRAY
-  date: Date = new Date();                        // CURRENT DATE
-  loading: boolean = false;                     // BOOLEAN TO SHOW LOADER WHEN ASYNC FUNCTION IS CALLED
+  @Input() container: any;              // INPUT OF COMPONENT
+  logs: Array<string> = [];             // LOGS ARRAY
+  date: Date = new Date();              // CURRENT DATE
+  loading: boolean = false;             // BOOLEAN TO SHOW LOADER WHEN ASYNC FUNCTION IS CALLED
 
 
   constructor(public api: ApiProvider) {
@@ -51,7 +50,7 @@ export class LogsComponent {
 
           setTimeout(() => {
             this.getLogs();
-          }, this.TIME_TO_REFRESH);
+          }, this.api.TIME_TO_REFRESH);
         },
           err => {
             // DEBUG MESSAGE
