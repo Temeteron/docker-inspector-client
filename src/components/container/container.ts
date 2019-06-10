@@ -7,15 +7,15 @@ import { ApiProvider } from "../../providers/api/api";
   templateUrl: 'container.html'
 })
 export class ContainerComponent {
-  @Input() container: any;                                      // CONTAINER OBJECTS PASSED FROM PARENT
+  @Input() container: any;                                         // CONTAINER OBJECTS PASSED FROM PARENT
   @Output() stats = new EventEmitter<Object>();                    // VAR TO COMMUNICATE WITH PAREMT ABOUT STATS
   @Output() logs = new EventEmitter<Object>();                     // VAR TO COMMUNICATE WITH PAREMT ABOUT LOGS
-  @Output() changedState = new EventEmitter<Object>();         // VAR TO COMMUNICATE WITH PARENT BECAUSE STATE CHANGED
+  @Output() changedState = new EventEmitter<Object>();             // VAR TO COMMUNICATE WITH PARENT BECAUSE STATE CHANGED
 
-  colorStats: string = 'colorBlue';
-  activeStats: boolean = false;
-  activeLogs: boolean = false;
-  loader: any = null;                                           // LOADER VAR FOR ASYNC REQUESTS
+  colorStatus: string = 'colorBlue';                                // VAR TO CHANGE COLOR GREEN-BLUE DEPENDING ON STATUS
+  activeStats: boolean = false;                                     // VAR THAT INDICATES IF STATS ARE ACTIVE
+  activeLogs: boolean = false;                                      // VAR THAT INDICATES IF LOGS ARE ACTIVE
+  loader: any = null;                                               // LOADER VAR FOR ASYNC REQUESTS
 
   constructor(public api: ApiProvider, public loadingCtrl: LoadingController, private alertCtrl: AlertController) {}
 
@@ -25,10 +25,10 @@ export class ContainerComponent {
 ///////////////////////////////////////////////////////////////////////////
   checkRunning(state) {
     if (state == 'running') {
-      this.colorStats = 'colorGreen';
+      this.colorStatus = 'colorGreen';
       return true;
     } else {
-      this.colorStats = 'colorBlue';
+      this.colorStatus = 'colorBlue';
       return false;
     }
   }
@@ -139,7 +139,7 @@ export class ContainerComponent {
     this.changedState.emit(stateObj);
   }
 
-////////////////////////////// PAGE HELPERS ////////////////////////////////////////
+////////////////////////////// PAGE HELPERS ///////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////
 // SHOW LOADING POPUP
