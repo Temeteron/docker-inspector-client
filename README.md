@@ -1,10 +1,10 @@
-# docker_inspector_client
+# docker-inspector-client
 The client part of a web based tool to interact and monitor docker containers
 
 ## Basic Info
 
 - A web based client developed in Ionic 3, Angular 4
-- Consumes REST API of [server](https://github.com/Temeteron/docker_inspector_server)
+- Consumes REST API of [server](https://github.com/Temeteron/docker-inspector-server)
 
 ## Architecture
 
@@ -35,7 +35,7 @@ The client part of a web based tool to interact and monitor docker containers
 
 - Interface screenshot
 
-![alt text](https://github.com/Temeteron/docker_inspector_client/blob/master/interaface.png)
+![alt text](https://github.com/Temeteron/docker-inspector-client/blob/master/interaface.png)
 
 ## Get started
 ```
